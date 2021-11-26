@@ -1,19 +1,20 @@
 import sqlite3
 import urllib.request
+from beautifulsoup_testing import get_info
 from bs4 import BeautifulSoup
 
-#config
+""" #config
 bib = 3563388
 #locale = 'en'
-locale = 'zh_TW'
+locale = 'zh_TW' """
 
-def get_value(book_info_type):
+""" def get_value(book_info_type):
     
     book_info = table_book_info.find('td', string=book_info_type).find_next_sibling('td').string
     if book_info == None:
         divs = table_book_info.find('td', string=book_info_type).find_next_sibling('td').find_all('div')
         book_info = divs[0].string + '\n ' + divs[1].string
-    return book_info
+    return book_info """
 
 def insertIntoTables(book,copies):
     try:
@@ -24,14 +25,14 @@ def insertIntoTables(book,copies):
         sqlite_insert_query_book = """INSERT INTO Book
                           (bookName, author, bibID, callNumber, physicalDescription,placeOfPublication, publisher,
                            publicationYear, seriesTitle, subject, addedAuthor, standardNumber, language, creationDate, lastUpdateDate) 
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
-        sqlite_insert_query_bookcopy = """INSERT INTO BookCopy
-                          (id, name, email, joining_date, salary) 
-                          VALUES (?, ?, ?, ?, ?);"""
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+        #sqlite_insert_query_bookcopy = """INSERT INTO BookCopy
+        #                  (id, name, email, joining_date, salary) 
+        #                  VALUES (?, ?, ?, ?, ?);"""
 
         cursor.execute(sqlite_insert_query_book, book)
-        for copy in copies:
-            cursor.execute(sqlite_insert_query_bookcopy, copy)
+        #for copy in copies:
+        #    cursor.execute(sqlite_insert_query_bookcopy, copy)
         sqliteConnection.commit()
         print("Python Variables inserted successfully into SqliteDb_developers table")
 
@@ -44,7 +45,12 @@ def insertIntoTables(book,copies):
             sqliteConnection.close()
             print("The SQLite connection is closed")
 
-def main():
+info = get_info(2835575)
+book = info[0]
+copies = info[1]
+insertIntoTables(book, copies)
+
+""" def main():
     url = 'https://webcat.hkpl.gov.hk/lib/item?id=chamo:'+str(bib)+'&fromLocationLink=false&theme=mobile&showAll=true&locale='+locale
     response = urllib.request.urlopen(url)
     htmlbytes = response.read()
@@ -74,3 +80,4 @@ def main():
         collection = tds[4].string
         copies[i] = [copy_name,status,collection]
         i += 1
+ """
