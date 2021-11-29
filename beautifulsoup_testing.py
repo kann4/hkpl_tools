@@ -17,10 +17,6 @@ response = urllib.request.urlopen(url)
 htmlbytes = response.read()
 bs = BeautifulSoup(htmlbytes, "html.parser") """
 
-#get single book-info, required before "table_book = bs.find('div', class_='itemFields').table"
-
-
-#for use in other file
 def get_info(bib):
     global book, copies
     def get_value(book_info_type):
@@ -41,17 +37,18 @@ def get_info(bib):
     response = urllib.request.urlopen(url)
     htmlbytes = response.read()
     bs = BeautifulSoup(htmlbytes, "html.parser")
+    today_date = datetime.date.today()
     #book
     book = []
     book_title = bs.find('h1', class_='title').string
     book.append(book_title)
-    table_book = bs.find('div', class_='itemFields').table   #need this line before get_value()
+    table_book = bs.find('div', class_='itemFields').table   #defining table_book for get_value()
     items = ['Author', 'Bib ID', 'Call Number', 'Physical Description', 'Place of Publication', 'Publisher',
     'Year', 'Series Title', 'Subject', 'Added Author', 'Standard No.', 'Language']
     for item in items:
         book.append(get_value(item))
-    book.append(str(datetime.date.today()))
-    book.append(str(datetime.date.today()))
+    book.append(str(today_date))
+    book.append(str(today_date))
     tuple(book)
     #copies
     table_copies = bs.find_all('form')[2].tbody
@@ -59,19 +56,25 @@ def get_info(bib):
     copies=[]
     for i in range(len(trs)):
         copies.append([])
-    i = 0
+    """ i = 0
     for tr in trs:
         tds = tr.find_all('div')
         copy_name = tds[0].string
         status = tds[3].string
         collection = tds[4].string
         copies[i] = [copy_name,status,collection]
-        i += 1
+        i += 1 """    
+    for i in range(len(trs)):
+        tds = trs[i].find_all('div')
+        copy_name = tds[0].string
+        status = tds[3].string
+        collection = tds[4].string
+        copies[i] = [copy_name,status,collection]    
 
     return (book,copies)
 
 print(get_info(3563388))
-    
+print(len(copies))    
     
 
 
