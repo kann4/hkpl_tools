@@ -19,11 +19,11 @@ def get_info(bib):
                     book_info = book_info + div.string + '\n'
         else:
             return 'N/A'
-            """ book_info = divs[0].string + '\n ' + divs[1].string """
         return book_info
 
     url = 'https://webcat.hkpl.gov.hk/lib/item?id=chamo:'+str(bib)+'&fromLocationLink=false&theme=mobile&showAll=true&locale=en'
-    response = urllib.request.urlopen(url)
+    # response = urllib.request.urlopen(url)
+    response = urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0'}))
     htmlbytes = response.read()
     bs = BeautifulSoup(htmlbytes, "html.parser")
     today_date = datetime.date.today()
@@ -55,7 +55,8 @@ def get_info(bib):
 
     return (book,copies)
 
-# print(get_info(3563388))
+# print(get_info(003563388))
 # print(len(copies))    
-    
+
 #why has to put get_value() inside?
+#why 58-60 is runned?

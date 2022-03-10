@@ -3,9 +3,10 @@ import urllib.request
 from bs4 import BeautifulSoup
 from beautifulsoup_testing import get_info
 import sys
-
+import time
+    
 def insertIntoTables(bib):
-    info = get_info(bib)
+    info = get_info(bib.lstrip('0'))
     book = info[0]
     copies = info[1]
     try:
@@ -39,19 +40,31 @@ def insertIntoTables(bib):
             cursor.execute(sqlite_insert_query_bookcopy, copy)
             
         sqliteConnection.commit()
-        print("inserted successfully into sqlite table")
+        print("Data of " + str(bib) +" is inserted successfully into sqlite db")
         cursor.close()
 
     except sqlite3.Error as error:
-        print("Failed to insert into sqlite table", error)
+        if str(error) == 'UNIQUE constraint failed: Book.standardNumber':
+            print(f'{bib} ({book[0]}) is already in the database.')
+        else:
+            print("Failed to insert into sqlite table", error)
     finally:
         if sqliteConnection:
             sqliteConnection.close()
             print("The SQLite connection is closed")
 
-#bib = 3542543
-if len(sys.argv) == 2:
-    bib = sys.argv[1]
-    insertIntoTables(bib)
+
+if len(sys.argv) >= 2:
+    for i in range(len(sys.argv)):
+        if i > 0:
+            bib = sys.argv[i]
+            insertIntoTables(bib)
 else:
-    print('BIB is missing')
+    bibs = input('Enter a BIB or multiple(seperate by space):\n')
+    start_time = time.time()
+    bibs = bibs.split()
+    for bib in bibs:
+        insertIntoTables(bib)
+
+
+print("--- %s seconds ---" % (time.time() - start_time))

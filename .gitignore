@@ -1,1 +1,7 @@
 __pycache__/
+*.csv
+*.xlsx
+*.txt
+*.db
+.venv/
+.vscode/
