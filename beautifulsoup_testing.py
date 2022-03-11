@@ -1,4 +1,5 @@
 import urllib.request
+import urllib.error
 from bs4 import BeautifulSoup
 import datetime
 
@@ -23,7 +24,12 @@ def get_info(bib):
 
     url = 'https://webcat.hkpl.gov.hk/lib/item?id=chamo:'+str(bib)+'&fromLocationLink=false&theme=mobile&showAll=true&locale=en'
     # response = urllib.request.urlopen(url)
-    response = urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0'}))
+    try:
+        response = urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0'}))
+    except urllib.request.HTTPError as e:
+        print(e)
+        return
+
     htmlbytes = response.read()
     bs = BeautifulSoup(htmlbytes, "html.parser")
     today_date = datetime.date.today()
