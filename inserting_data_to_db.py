@@ -5,6 +5,8 @@ from beautifulsoup_testing import get_info
     
 def insertIntoTables(bib):
     info = get_info(bib.lstrip('0'))
+    if info is None:
+        return
     book = info[0]
     copies = info[1]
     try:
