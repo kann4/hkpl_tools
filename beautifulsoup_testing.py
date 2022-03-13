@@ -25,7 +25,7 @@ def get_info(bib):
     url = 'https://webcat.hkpl.gov.hk/lib/item?id=chamo:'+str(bib)+'&fromLocationLink=false&theme=mobile&showAll=true&locale=en'
     # response = urllib.request.urlopen(url)
     try:
-    response = urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0'}))
+        response = urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0'}))
     except urllib.request.HTTPError as e:
         print(e)
         return
@@ -65,4 +65,3 @@ def get_info(bib):
 # print(len(copies))    
 
 #why has to put get_value() inside?
-#why 58-60 is runned?
