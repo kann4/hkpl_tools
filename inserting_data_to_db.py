@@ -2,8 +2,6 @@ import sqlite3
 import urllib.request
 from bs4 import BeautifulSoup
 from beautifulsoup_testing import get_info
-import sys
-import time
     
 def insertIntoTables(bib):
     info = get_info(bib.lstrip('0'))
@@ -52,19 +50,3 @@ def insertIntoTables(bib):
         if sqliteConnection:
             sqliteConnection.close()
             print("The SQLite connection is closed")
-
-
-if len(sys.argv) >= 2:
-    for i in range(len(sys.argv)):
-        if i > 0:
-            bib = sys.argv[i]
-            insertIntoTables(bib)
-else:
-    bibs = input('Enter a BIB or multiple(seperate by space):\n')
-    start_time = time.time()
-    bibs = bibs.split()
-    for bib in bibs:
-        insertIntoTables(bib)
-
-
-print("--- %s seconds ---" % (time.time() - start_time))
