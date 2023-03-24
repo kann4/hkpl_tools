@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table, th, td {border: 1px solid black;}
+        th, td {padding: 3px;}
+        table {font-size: 12px;}
+    </style>
+</head>
+<a href="{{ ('/') }}">Back to home</a>
+<body>
+    <form method='post', action="/Saved_Books">
+        <button type="submit">Delete Selected Rows</button>
+        <table>
+            <tr>
+                {%for column_name in column_names%}
+                <th>{{column_name}}</th>
+                {%endfor%}
+                <th>Select</th>
+            </tr>
+            {%for book in books%}
+            <tr>
+                {%for x in book%}
+                <td>{{x}}</td>            
+                {%endfor%}
+                <td><input type="checkbox", name="del_book", value="{{book[0]}}"></td>
+            </tr>
+            {%endfor%}
+        </table>
+    </form>
+    
+</body>
+</html>

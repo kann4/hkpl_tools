@@ -6,6 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        form {margin: 10px 0px;}
+        table, th, td {border: 1px solid black;}
+        th, td {padding: 3px;}
+        ul:before{
+            content:attr(aria-label);
+            font-size:120%;
+            font-weight:bold;
+            margin-left:-15px;
+            margin-top: 200px;
+        }  
+        </style>
+    <script language="javascript" type="text/javascript">
+        function removeSpaces(string) {return string.split(' ').join('');}
+        </script>
 </head>
 
 <body>
@@ -14,9 +29,47 @@
         sgisdghl
     </header>
     <form action="/" method="post">
-        <input type="text" name="bib" value="14">
+        <input type="text" name="bib" placeholder="e.g. 003377312" onblur="this.value=removeSpaces(this.value);">
         <input type="submit" value="save book">
     </form>
+    
+    <a href="{{('Saved_Books')}}">View Saved Books</a>
+    
+    <div>{{save_msg}}</div>
+
+    <form action="/" method="POST">
+        <input type="submit" value="update copies"><span> {{update_msg}}</span>
+        <div>{{lastupdate}}</div>
+    </form>
+
+    <form action="/" method="POST">
+        <label>check library</label>
+        <select name="library" >
+            <!-- <option value="" disabled selected>Select your option</option> -->
+            {%for library in libraries%}
+            <option value="{{library}}">{{library}} Library</option>
+            {%endfor%}
+        </select>
+        <input type="submit" value="confirm"> <span>{{error_msg}}</span>
+    </form>
+    
+    <table>
+        <caption>{{library_msg}}</caption>
+        <tr>
+            <th>book title</th>
+            <th>call number</th>
+            <th>status</th>
+            <th>collection</th>
+        </tr>
+        {%for copy in copies%}
+        <tr>
+            <td>{{copy[0]}}</td>
+            <td>{{copy[1]}}</td>
+            <td>{{copy[2]}}</td>
+            <td>{{copy[3]}}</td>
+        </tr>
+        {%endfor%}
+    </table>
 </body>
 
 </html>
