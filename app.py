@@ -21,7 +21,8 @@ def home():
             #     return render_template('index.html', lastupdate=f'lastupdate: {lastupdate}', error_msg = 'please select a library', libraries=libraries)
             library = request.form['library']
             copies = getCopies(library)
-            return render_template('index.html', copies=copies, library_msg=f'{len(copies)} copies available in {library} Library', lastupdate=f'lastupdate: {lastupdate}', libraries=libraries)
+            library_msg = f'{len(copies)} copies available in {library} Library'
+            return render_template('index.html', copies=copies, library_msg=library_msg, lastupdate=f'lastupdate: {lastupdate}', libraries=libraries, selection=library)
         else:    #update
             books_failed_to_update = updateCopies()
             if books_failed_to_update == []:

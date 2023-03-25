@@ -47,7 +47,7 @@
         <select name="library" >
             <!-- <option value="" disabled selected>Select your option</option> -->
             {%for library in libraries%}
-            <option value="{{library}}">{{library}} Library</option>
+            <option value="{{library}}" {% if selection == library %} selected {% endif %}>{{library}} Library</option>
             {%endfor%}
         </select>
         <input type="submit" value="confirm"> <span>{{error_msg}}</span>
