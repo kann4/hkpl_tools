@@ -11,10 +11,12 @@
         table {font-size: 12px;}
     </style>
 </head>
-<a href="{{ ('/') }}">Back to home</a>
+
 <body>
+<a href="{{ ('/') }}">Back to home</a>
     <form method='post', action="/Saved_Books">
         <button type="submit">Delete Selected Rows</button>
+        <div>{{msg}}</div>
         <table>
             <tr>
                 {%for column_name in column_names%}
@@ -27,7 +29,7 @@
                 {%for x in book%}
                 <td>{{x}}</td>            
                 {%endfor%}
-                <td><input type="checkbox", name="del_book", value="{{book[0]}}"></td>
+                <td><input type="checkbox", name="book_ids", value="{{book[0]}}"></td>
             </tr>
             {%endfor%}
         </table>

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from inserting_data_to_db import insertIntoTables, getCopies, updateCopies, lastUpdate, getBookTable, listOfLibraries
+from inserting_data_to_db import insertIntoTables, getCopies, updateCopies, lastUpdate, getBookTable, listOfLibraries, delBook
 import datetime
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -15,7 +15,7 @@ def home():
         if 'bib' in request.form:
         bib = request.form['bib']
             message = insertIntoTables(bib)
-            return render_template('index.html',save_msg=f'{message}', lastupdate=f'lastupdate: {lastupdate}')
+            return render_template('index.html',save_msg=f'{message}', lastupdate=f'lastupdate: {lastupdate}', libraries=libraries)
         elif 'library' in request.form: 
             # if request.form['library'] == '':
             #     return render_template('index.html', lastupdate=f'lastupdate: {lastupdate}', error_msg = 'please select a library', libraries=libraries)
@@ -38,6 +38,8 @@ def savedBooks():
         column_names = table[0]
         books = table[1]
         return render_template('books.html', column_names=column_names, books=books)
-    if request.method == 'POST' and 'del_book' in request.form:
-        del_book = request.form
-        return del_book
+    if request.method == 'POST' and 'book_ids' in request.form:
+        book_ids = request.form.getlist('book_ids')
+        delBook(book_ids)
+        table = getBookTable()        
+        return render_template('books.html', column_names=table[0], books=table[1], msg=f'{book_ids} has been deleted')

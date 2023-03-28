@@ -178,3 +178,20 @@ def listOfLibraries():
         if sqliteConnection:
             sqliteConnection.close()
             print("The SQLite connection is closed")    
+def delBook(book_IDs):
+    try:
+        sqliteConnection = sqlite3.connect('hkpl_tools.db')
+        cursor = sqliteConnection.cursor()
+        print("Connected to SQLite")
+        for book_ID in book_IDs:
+            cursor.execute(f"DELETE from Book WHERE bookID={book_ID}")
+            cursor.execute(f"DELETE from BookCopy WHERE bookID={book_ID}")
+        sqliteConnection.commit()
+        cursor.close()
+        return book_IDs
+    except sqlite3.Error as error:
+        print('**************failed to delete', error,'**************************')
+    finally:
+        if sqliteConnection:
+            sqliteConnection.close()
+            print("The SQLite connection is closed")
