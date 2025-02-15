@@ -25,32 +25,32 @@
 
 <body>
     <header>
-        <h1>hkpl tools</h1>
-        sgisdghl
+        <h1>HKPL Tools</h1>
+        <!-- sgisdghl -->
     </header>
     <form action="/" method="post">
+        BIB:
         <input type="text" name="bib" placeholder="e.g. 003377312" onblur="this.value=removeSpaces(this.value);">
-        <input type="submit" value="save book">
+        <input type="submit" value="Save Book">
+        <span>{{save_msg}}</span>
     </form>
     
     <a href="{{('Saved_Books')}}">View Saved Books</a>
-    
-    <div>{{save_msg}}</div>
 
     <form action="/" method="POST">
-        <input type="submit" value="update copies"><span> {{update_msg}}</span>
-        <div>{{lastupdate}}</div>
+        <span>{{lastupdate}}</span>
+        <input type="submit" value="Update Copies"><span> {{update_msg}}</span>
     </form>
 
     <form action="/" method="POST">
-        <label>check library</label>
+        <label style="font-weight: bold;">Check Library</label>
         <select name="library" >
             <!-- <option value="" disabled selected>Select your option</option> -->
             {%for library in libraries%}
             <option value="{{library}}" {% if selection == library %} selected {% endif %}>{{library}} Library</option>
             {%endfor%}
         </select>
-        <input type="submit" value="confirm"> <span>{{error_msg}}</span>
+        <input type="submit" value="Confirm"> 
     </form>
 
     <table>
@@ -70,9 +70,14 @@
         </tr>
         {%endfor%}
     </table>
-
+    <span>{{error_msg}}</span>
     
     <ul style="margin-top: 400px;" aria-label="Todo">
+        <li>extract getLibraryID function</li>
+        <li>add new ssp library</li>
+        <li>soft delete</li>
+        <li>sperate route for update/check library</li>
+        <li>-------------</li>
         <li>multiple input</li>
         <li>fix: if update failed for some book, last update is misleading</li>
         <li>last update sometimes get from copies table, sometimes timenow</li>
