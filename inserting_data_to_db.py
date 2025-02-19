@@ -45,15 +45,13 @@ def insertIntoTables(bib):
             sqliteConnection.close()
             print("The SQLite connection is closed")
 
-def getCopies(library):   #get copies availabe in certain libraary
+def getCopies(library_name):   #get copies availabe in certain libraary
     try:
         sqliteConnection = sqlite3.connect('hkpl_tools.db')
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite")
 
-        sqlite_select_query = """SELECT libraryID from Library where englishName = ?"""
-        cursor.execute(sqlite_select_query, (library,))
-        library_ID = cursor.fetchone()[0]
+        library_ID = getLibraryID(cursor, library_name)
         sqlite_select_query = """SELECT bookID, status, collection from bookCopy where libraryID = ?"""
         cursor.execute(sqlite_select_query, (library_ID,))
         copies = cursor.fetchall()
@@ -106,24 +104,31 @@ def updateCopies():
             print("The SQLite connection is closed")
 
 def insertCopies(book_ID,copies,cursor):      #contain query code only, use for insertIntoTables() and updateCopies()
-        for copy in copies:
-            copy.insert(0,book_ID)
-            sqlite_select_query = """SELECT libraryID from Library where englishName = ?"""
-            cursor.execute(sqlite_select_query, (copy[1],))
-            library_ID = cursor.fetchone()[0]
-            copy[1] = library_ID
-            if copy[2][:3] == 'Due':
-                due_date = copy[2][4:]
-            else:
-                due_date = 'NA'
-            copy.insert(3,due_date)
+    for copy in copies:
+        copy.insert(0,book_ID)
+        library_ID = getLibraryID(cursor, copy[1])
+        copy[1] = library_ID
+        if copy[2][:3] == 'Due':
+            due_date = copy[2][4:]
+        else:
+            due_date = 'NA'
+        copy.insert(3,due_date)
 
-        sqlite_insert_query_bookcopy = """INSERT INTO BookCopy
-                          (bookID, libraryID, status, dueDate, collection, creationDate, lastUpdateDate) 
-                          VALUES (?, ?, ?, ?, ?, ?, ?);"""
-        for copy in copies:
-            cursor.execute(sqlite_insert_query_bookcopy, copy)
-            
+    sqlite_insert_query_bookcopy = """INSERT INTO BookCopy
+                            (bookID, libraryID, status, dueDate, collection, creationDate, lastUpdateDate) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?);"""
+    for copy in copies:
+        cursor.execute(sqlite_insert_query_bookcopy, copy)
+
+def getLibraryID(cursor, library_name):
+    sqlite_select_query = """SELECT libraryID from Library where englishName = ?"""
+    cursor.execute(sqlite_select_query, (library_name,))
+    result = cursor.fetchone()
+    if result is None:
+        raise ValueError(f"Library with name '{library_name}' not found.")
+    library_ID = result[0]
+    return library_ID
+
 def lastUpdate():
     try:
         sqliteConnection = sqlite3.connect('hkpl_tools.db')
