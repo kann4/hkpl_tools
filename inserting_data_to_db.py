@@ -49,7 +49,7 @@ def getCopies(library_name):   #get copies availabe in certain libraary
     try:
         sqliteConnection = sqlite3.connect('hkpl_tools.db')
         cursor = sqliteConnection.cursor()
-        print("Connected to SQLite")
+        print("Connected to SQLite, getting copies from db...")
 
         library_ID = getLibraryID(cursor, library_name)
         sqlite_select_query = """SELECT bookID, status, collection from bookCopy where libraryID = ?"""
@@ -74,18 +74,18 @@ def updateCopies():
     try:
         sqliteConnection = sqlite3.connect('hkpl_tools.db')
         cursor = sqliteConnection.cursor()
-        print("Connected to SQLite")
+        print("Connected to SQLite: Begin to update copies...")
         
         sqlite_select_query = """SELECT bookID, bibID from Book ORDER BY bookID"""                
         cursor.execute(sqlite_select_query)
         books_failed_to_update = []
-        #print(cursor.fetchall())
-        for book_ID, bib in cursor.fetchall():      # for item in <expression>:      
+        bookID_bibID = cursor.fetchall()          #running cursor.fetchall twice will fetch nothing in second time
+        for book_ID, bib in bookID_bibID :      # for item in <expression>:      
             try:
                 sqlite_delete_query = "DELETE FROM BookCopy WHERE bookID = ?"
                 cursor.execute(sqlite_delete_query,(book_ID,))
                 copies = get_info(bib, get_book_info=False)
-                # logging.debug(f'****copies****{copies}**********')
+                # print(f'****copies****{copies}**********')
                 insertCopies(book_ID,copies,cursor)
                 sqliteConnection.commit()
                 print(f'*************{book_ID} is updated successfully*************')
@@ -133,7 +133,7 @@ def lastUpdate():
     try:
         sqliteConnection = sqlite3.connect('hkpl_tools.db')
         cursor = sqliteConnection.cursor()
-        print("Connected to SQLite, start get last update")
+        print("Connected to SQLite, start get last update time")
 
         sqlite_select_query = """SELECT lastUpdateDate from BookCopy ORDER BY lastUpdateDate DESC LIMIT 1"""
         cursor.execute(sqlite_select_query)
@@ -171,7 +171,7 @@ def listOfLibraries():
     try:
         sqliteConnection = sqlite3.connect('hkpl_tools.db')
         cursor = sqliteConnection.cursor()
-        print("Connected to SQLite")
+        print("Connected to SQLite: getting list of libraries")
         cursor.execute("SELECT englishName from Library ORDER BY libraryID ASC")
         results = cursor.fetchall()
         # print(results)
@@ -182,15 +182,15 @@ def listOfLibraries():
     finally:
         if sqliteConnection:
             sqliteConnection.close()
-            print("The SQLite connection is closed")    
+            print("The SQLite connection is closed")
 def delBook(book_IDs):
     try:
         sqliteConnection = sqlite3.connect('hkpl_tools.db')
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite")
         for book_ID in book_IDs:
-            cursor.execute(f"DELETE from Book WHERE bookID={book_ID}")
-            cursor.execute(f"DELETE from BookCopy WHERE bookID={book_ID}")
+            cursor.execute("DELETE from Book WHERE bookID = ?", (book_ID,))
+            cursor.execute("DELETE from BookCopy WHERE bookID = ?", (book_ID,))
         sqliteConnection.commit()
         cursor.close()
         return book_IDs
