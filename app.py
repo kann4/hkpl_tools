@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 from inserting_data_to_db import insertIntoTables, getCopies, updateCopies, lastUpdate, getBookTable, listOfLibraries, delBook
 import datetime
+import logging
+
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
@@ -36,6 +38,7 @@ def home():
                 return render_template('index.html', update_msg = update_msg, libraries=libraries)
     except Exception as e:
         print(e)
+        logging.exception(e)
         return render_template('index.html', error_msg='An error occurred. Please try again.', libraries=libraries)
 
 @app.route("/Saved_Books", methods=['GET','POST'])
