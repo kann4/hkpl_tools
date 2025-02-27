@@ -137,7 +137,11 @@ def lastUpdate():
 
         sqlite_select_query = """SELECT lastUpdateDate from BookCopy ORDER BY lastUpdateDate DESC LIMIT 1"""
         cursor.execute(sqlite_select_query)
-        lastupdate = cursor.fetchone()[0]
+        result = cursor.fetchone()
+        if result:
+            lastupdate = result[0]
+        else:
+            lastupdate = None  # or raise an exception
         return lastupdate
 
     except sqlite3.Error as error:
