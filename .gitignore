@@ -5,3 +5,4 @@ notes.txt
 .venv/
 .vscode/
 *.db
+.history
