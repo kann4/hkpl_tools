@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from inserting_data_to_db import insertIntoTables, getCopies, updateCopies, lastUpdate, getBookTable, listOfLibraries, delBook
 import datetime
 import logging
+from urllib.parse import urlparse, parse_qs
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -20,6 +21,14 @@ def home():
         if request.method == 'POST':
             if 'bib' in request.form:
                 bib = request.form['bib']
+                # Try Parse bib as URL
+                parsed_url = urlparse(bib)
+                query_params = parse_qs(parsed_url.query) # Extract the query string
+                id_value = query_params.get('id', [None])[0] # Get the 'id' parameter: should be in format "chamo:3655993"
+                id = id_value.split(':')[-1] if id_value else None # Extract the numeric part after the colon)
+                bib = id if id else bib # Use the extracted ID if available, otherwise use the original bib value
+                # End of parsing bib as URL
+                print(bib) # Print the final bib value to be used
                 message = insertIntoTables(bib)
                 return render_template('index.html',save_msg=f'{message}', lastupdate=get_last_update_text(lastupdate), libraries=libraries)
             elif 'library' in request.form: 
