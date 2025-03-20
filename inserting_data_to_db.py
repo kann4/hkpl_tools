@@ -1,5 +1,5 @@
 import sqlite3
-from beautifulsoup_testing import get_info
+from beautifulsoup import get_info
     
 def insertIntoTables(bib):
     info = get_info(bib)
