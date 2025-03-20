@@ -8,27 +8,30 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 libraries = listOfLibraries()
 
+def get_last_update_text(lastupdate):
+    return f'Last Update: {lastupdate}'
+
 @app.route("/", methods=['POST', 'GET'])
 def home():
     try:
         lastupdate = lastUpdate()
         if request.method == 'GET':        
-            return render_template('index.html', lastupdate=f'Last Update: {lastupdate}', libraries=libraries)
+            return render_template('index.html', lastupdate=get_last_update_text(lastupdate), libraries=libraries)
         if request.method == 'POST':
             if 'bib' in request.form:
                 bib = request.form['bib']
                 message = insertIntoTables(bib)
-                return render_template('index.html',save_msg=f'{message}', lastupdate=f'Last Update: {lastupdate}', libraries=libraries)
+                return render_template('index.html',save_msg=f'{message}', lastupdate=get_last_update_text(lastupdate), libraries=libraries)
             elif 'library' in request.form: 
                 # if request.form['library'] == '':
-                #     return render_template('index.html', lastupdate=f'lastupdate: {lastupdate}', error_msg = 'please select a library', libraries=libraries)
+                #     return render_template('index.html', lastupdate=get_last_update_text(lastupdate), error_msg = 'please select a library', libraries=libraries)
                 library = request.form['library']
                 print(library)
                 copies = getCopies(library)
                 print('finish getCopies')
                 # print(copies)
                 library_msg = f'{len(copies)} copies available in {library} Library'
-                return render_template('index.html', copies=copies, library_msg=library_msg, lastupdate=f'Last Update: {lastupdate}', libraries=libraries, selection=library)
+                return render_template('index.html', copies=copies, library_msg=library_msg, lastupdate=get_last_update_text(lastupdate), libraries=libraries, selection=library)
             else:    #update
                 books_failed_to_update = updateCopies()
                 if books_failed_to_update == []:
