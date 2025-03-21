@@ -59,6 +59,12 @@
         </div>
         <!-- sgisdghl -->
     </header>
+    <form action="/search" method="post">
+        <!-- <a href="/search">Search Books</a> -->
+        <input type="text" name="search_term" placeholder="Enter book title or author">
+        <input type="submit" value="Search">
+    </form>
+
     <form action="/" method="post">
         BIB:
         <input type="text" name="bib" placeholder="e.g. 003377312" onblur="this.value=removeSpaces(this.value);">

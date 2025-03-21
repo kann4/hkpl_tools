@@ -3,6 +3,7 @@ from inserting_data_to_db import insertIntoTables, getCopies, updateCopies, last
 import datetime
 import logging
 from urllib.parse import urlparse, parse_qs
+from book_lookup import get_book_list
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -52,6 +53,37 @@ def home():
         print(e)
         logging.exception(e)
         return render_template('index.html', error_msg='An error occurred. Please try again.', libraries=libraries)
+
+@app.route('/search', methods=['GET', 'POST'])
+def search_books():
+    try:
+        if request.method == 'POST':
+            search_term = request.form.get('search_term')
+            if not search_term or search_term.strip() == '':
+                return render_template('search.html', 
+                                    error_msg='Please enter a search term',
+                                    libraries=libraries)
+            
+            results = get_book_list(search_term)
+            if isinstance(results, str):  # Error message from get_book_list
+                return render_template('search.html',
+                                    error_msg=results,
+                                    search_term=search_term,
+                                    libraries=libraries)
+            
+            return render_template('search.html',
+                                results=results,
+                                search_term=search_term,
+                                libraries=libraries)
+        
+        return render_template('search.html', libraries=libraries)
+    except Exception as e:
+        print(e)
+        logging.exception(e)
+        return render_template('search.html',
+                            error_msg='An error occurred during search. Please try again.',
+                            libraries=libraries)
+
 
 @app.route("/Saved_Books", methods=['GET','POST'])
 def savedBooks():
