@@ -64,6 +64,9 @@ def savedBooks():
         delBook(book_ids)
         table = getBookTable()
         return render_template('books.html', column_names=table[0], books=table[1], msg=f'{book_ids} has been deleted')
+@app.route('/user_guide')
+def user_guide():
+    return render_template('user_guide.html')
 # @app.route("/Delete_Books", methods=['POST'])
 # def deleteBook():
 
