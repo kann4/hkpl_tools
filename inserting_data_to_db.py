@@ -1,6 +1,10 @@
 import sqlite3
 from beautifulsoup import get_info
-    
+import config
+
+def get_db_connection():
+    return sqlite3.connect(config.DB_PATH)
+
 def insertIntoTables(bib):
     info = get_info(bib)
     if type(info) is str:
@@ -8,7 +12,7 @@ def insertIntoTables(bib):
     book = info[0]
     copies = info[1]
     try:
-        sqliteConnection = sqlite3.connect('hkpl_tools.db')
+        sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite, insert new entry.")
 
@@ -47,7 +51,7 @@ def insertIntoTables(bib):
 
 def getCopies(library_name):   #get copies availabe in certain libraary
     try:
-        sqliteConnection = sqlite3.connect('hkpl_tools.db')
+        sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite, getting copies from db...")
 
@@ -72,17 +76,17 @@ def getCopies(library_name):   #get copies availabe in certain libraary
 
 def updateCopies():
     try:
-        sqliteConnection = sqlite3.connect('hkpl_tools.db')
+        sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite: Begin to update copies...")
         
-        sqlite_select_query = """SELECT bookID, bibID from Book ORDER BY bookID"""                
+        sqlite_select_query = """SELECT bookID, bibID from Book ORDER BY bookID"""
         cursor.execute(sqlite_select_query)
         books_failed_to_update = []
         bookID_bibID = cursor.fetchall()          #running cursor.fetchall twice will fetch nothing in second time
         for book_ID, bib in bookID_bibID :      # for item in <expression>:      
             try:
-                sqlite_delete_query = "DELETE FROM BookCopy WHERE bookID = ?"
+                sqlite_delete_query = "DELETE FROM BookCopy WHERE bookID = ?" 
                 cursor.execute(sqlite_delete_query,(book_ID,))
                 copies = get_info(bib, get_book_info=False)
                 # print(f'****copies****{copies}**********')
@@ -90,8 +94,8 @@ def updateCopies():
                 sqliteConnection.commit()
                 print(f'*************{book_ID} is updated successfully*************')
             except sqlite3.Error as error:
-                print(f'***************Failed to update {x[0]}/{x[1]}, {error}********************')
-                books_failed_to_update.append((x[0], x[1]))
+                print(f'***************Failed to update {book_ID}/{bib}, {error}********************')
+                books_failed_to_update.append((book_ID, bib))
 
         cursor.close()
         return books_failed_to_update           
@@ -131,7 +135,7 @@ def getLibraryID(cursor, library_name):
 
 def lastUpdate():
     try:
-        sqliteConnection = sqlite3.connect('hkpl_tools.db')
+        sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite, start get last update time")
 
@@ -153,7 +157,7 @@ def lastUpdate():
 
 def getBookTable():
     try:
-        sqliteConnection = sqlite3.connect('hkpl_tools.db')
+        sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite")
         cursor.execute("SELECT * from Book")
@@ -173,7 +177,7 @@ def getBookTable():
 
 def listOfLibraries():
     try:
-        sqliteConnection = sqlite3.connect('hkpl_tools.db')
+        sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite: getting list of libraries")
         cursor.execute("SELECT englishName, libraryNumber from Library ORDER BY libraryID ASC")
@@ -189,7 +193,7 @@ def listOfLibraries():
             print("The SQLite connection is closed")
 def delBook(book_IDs):
     try:
-        sqliteConnection = sqlite3.connect('hkpl_tools.db')
+        sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite")
         for book_ID in book_IDs:
