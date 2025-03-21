@@ -27,6 +27,12 @@ def get_book_list(search_term):
         if record_highlight:
             # Extract publication and call number
             item_fields = record_highlight.find('div', class_='itemFields')
+            
+            # Extract image URL
+            img_tag = record.find('div', class_='recordImage').find('img')
+            if img_tag and img_tag.get('src'):
+                book_info['image_url'] = img_tag['src']
+            
             if item_fields:
                 for row in item_fields.find_all('tr'):
                     label = row.find('td', class_='label')
@@ -42,7 +48,7 @@ def get_book_list(search_term):
                 # Extract ID from href
                 href = title.get('href')
                 if href:
-                    book_info['id'] = href.split('id=')[1].split('&')[0].split(':')[1] if 'id=' in href else None
+                    book_info['bib'] = href.split('id=')[1].split('&')[0].split(':')[1] if 'id=' in href else None
             
             if book_info:  # Only add if we have complete information
                 books.append(book_info)
