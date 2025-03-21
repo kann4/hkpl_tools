@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.default.min.css">
     <style>
         form {margin: 10px 0px;}
         table, th, td {border: 1px solid black;}
@@ -16,11 +17,18 @@
             font-weight:bold;
             margin-left:-15px;
             margin-top: 200px;
-        }  
-        </style>
+        }
+        .selectize-control {
+            display: inline-block;
+            width: 200px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script language="javascript" type="text/javascript">
         function removeSpaces(string) {return string.split(' ').join('');}
-        </script>
+    </script>
 </head>
 
 <body>
@@ -47,8 +55,8 @@
 
     <form action="/" method="POST">
         <label style="font-weight: bold;">Check Library</label>
-        <select name="library" >
-            <!-- <option value="" disabled selected>Select your option</option> -->
+        <select name="library" class="selectize">
+            <option value="" disabled selected>Select library</option>
             {%for library in libraries%}
             <option value="{{library}}" {% if selection == library %} selected {% endif %}>{{library}} Library</option>
             {%endfor%}
@@ -93,6 +101,12 @@
         <li>add table to store deleted books</li>
         
     </ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $('.selectize').selectize();
+        });
+    </script>
 </body>
 
 </html>
