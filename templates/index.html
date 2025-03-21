@@ -6,28 +6,47 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.default.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css">
     <style>
-        form {margin: 10px 0px;}
-        table, th, td {border: 1px solid black;}
-        th, td {padding: 3px;}
-        ul:before{
-            content:attr(aria-label);
-            font-size:120%;
-            font-weight:bold;
-            margin-left:-15px;
+        form {
+            margin: 10px 0px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 3px;
+        }
+
+        ul:before {
+            content: attr(aria-label);
+            font-size: 120%;
+            font-weight: bold;
+            margin-left: -15px;
             margin-top: 200px;
         }
+
         .selectize-control {
             display: inline-block;
-            width: 200px;
             margin-left: 10px;
             vertical-align: middle;
+            max-width: calc(100vw - 300px);
+        }
+
+        .selectize-dropdown {
+            width: auto !important;
+            max-width: calc(100vw - 300px);
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script language="javascript" type="text/javascript">
-        function removeSpaces(string) {return string.split(' ').join('');}
+        function removeSpaces(string) { return string.split(' ').join(''); }
     </script>
 </head>
 
@@ -35,7 +54,8 @@
     <header>
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <h1>HKPL Tools</h1>
-            <a href="/user_guide" style="text-decoration: none; font-size: 1.5em; color: #666; margin-right: 10px;">?</a>
+            <a href="/user_guide"
+                style="text-decoration: none; font-size: 1.5em; color: #666; margin-right: 10px;">?</a>
         </div>
         <!-- sgisdghl -->
     </header>
@@ -45,7 +65,7 @@
         <input type="submit" value="Save Book">
         <span>{{save_msg}}</span>
     </form>
-    
+
     <a href="{{('Saved_Books')}}">View Saved Books</a>
 
     <form action="/" method="POST">
@@ -58,10 +78,11 @@
         <select name="library" class="selectize">
             <option value="" disabled selected>Select library</option>
             {%for library in libraries%}
-            <option value="{{library.englishName}}" {% if selection == library.englishName  %} selected {% endif %}>{{library.libraryNumber}}. {{library.englishName}} Library</option>
+            <option value="{{library.englishName}}" {% if selection==library.englishName %} selected {% endif %}>
+                {{library.libraryNumber}}. {{library.englishName}} Library</option>
             {%endfor%}
         </select>
-        <input type="submit" value="Confirm"> 
+        <input type="submit" value="Confirm">
     </form>
 
     <table>
@@ -82,7 +103,7 @@
         {%endfor%}
     </table>
     <span>{{error_msg}}</span>
-    
+
     <ul style="margin-top: 400px;" aria-label="Todo">
         <li>extract getLibraryID function</li>
         <li>add new ssp library</li>
@@ -99,12 +120,46 @@
         <li>handle 0 checkbox submit</li>
         <li>central libray not working (also art one)</li>
         <li>add table to store deleted books</li>
-        
+
     </ul>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            $('.selectize').selectize();
+        document.addEventListener('DOMContentLoaded', function () {
+            const select = $('.selectize').selectize({
+                plugins: ["clear_button"]
+            });
+
+            // Calculate width based on longest item
+            const selectize = select[0].selectize;
+            const items = selectize.options;
+            let maxWidth = 0;
+
+            // Create temporary element to measure text width
+            const temp = document.createElement('span');
+            temp.style.visibility = 'hidden';
+            temp.style.whiteSpace = 'nowrap';
+            document.body.appendChild(temp);
+
+            // Find the longest item
+            Object.values(items).forEach(item => {
+                temp.textContent = item.text;
+                maxWidth = Math.max(maxWidth, temp.offsetWidth);
+            });
+
+            // Clean up
+            document.body.removeChild(temp);
+
+            // Set width with max constraint
+            const finalWidth = Math.min(maxWidth + 40, window.innerWidth - 300); // Add padding and respect max width
+            selectize.$control.css('width', finalWidth + 'px');
+            selectize.$dropdown.css('width', finalWidth + 'px');
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const newWidth = Math.min(maxWidth + 40, window.innerWidth - 300);
+                selectize.$control.css('width', newWidth + 'px');
+                selectize.$dropdown.css('width', newWidth + 'px');
+            });
         });
     </script>
 </body>
