@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HKPL Tools User Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1, h2 { color: #2c3e50; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .mermaid { text-align: center; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>HKPL Tools User Guide</h1>
+    
+    <h2>System Workflow</h2>
+    <div class="mermaid">
+        sequenceDiagram
+            participant User
+            participant WebUI
+            participant Database
+            participant HKPLWebsite
+            
+            User->>WebUI: Enters BIB ID/URL
+            WebUI->>HKPLWebsite: Scrapes book data
+            HKPLWebsite-->>WebUI: Returns book details
+            WebUI->>Database: Stores book metadata
+            WebUI-->>User: Shows save confirmation
+            
+            User->>WebUI: Selects library
+            WebUI->>Database: Queries available copies
+            Database-->>WebUI: Returns availability data
+            WebUI-->>User: Displays library availability
+            
+            User->>WebUI: Clicks "Update Copies"
+            WebUI->>HKPLWebsite: Checks current status
+            HKPLWebsite-->>WebUI: Returns latest data
+            WebUI->>Database: Updates records
+            WebUI-->>User: Shows update status
+            
+            User->>WebUI: Views Saved Books
+            WebUI->>Database: Retrieves tracked books
+            Database-->>WebUI: Returns book list
+            WebUI-->>User: Displays management interface
+    </div>
+
+    <h2>Key Interaction Points</h2>
+    <h3>1. Book Tracking</h3>
+    <ul>
+        <li><strong>Input:</strong> BIB ID or library URL</li>
+        <li><strong>Process:</strong> Web scraping → Database storage</li>
+        <li><strong>Output:</strong> Success/failure message</li>
+    </ul>
+
+    <h3>2. Availability Check</h3>
+    <ul>
+        <li>Select from 20+ HKPL branches</li>
+        <li>Real-time database query</li>
+        <li>Tabular display of available copies</li>
+    </ul>
+
+    <h3>3. Data Maintenance</h3>
+    <ul>
+        <li>Bulk update mechanism</li>
+        <li>Multi-book deletion interface</li>
+        <li>Versioned database updates</li>
+    </ul>
+
+    <h2>Pending Improvements</h2>
+    <ul>
+        <li>Multiple book input support</li>
+        <li>Central library compatibility fixes</li>
+        <li>Enhanced error logging</li>
+        <li>Database connection pooling</li>
+        <li>Soft delete functionality</li>
+    </ul>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>

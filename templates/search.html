@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Books - HKPL Tools</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css">
+    <style>
+        .search-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .search-form {
+            margin-bottom: 20px;
+        }
+
+        .search-results {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .result-item h3 {
+            margin: 0 0 10px;
+        }
+
+        .save-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="search-container">
+        <h1>Search Books</h1>
+
+        <form class="search-form" action="/search" method="post">
+            <input type="text" name="search_term" placeholder="Enter book title or author" value="{{ search_term }}">
+            <button type="submit">Search</button>
+        </form>
+
+        {% if results %}
+        <div class="search-results">
+            {% for book in results %}
+            <div class="result-item">
+                {% if book.image_url %}
+                <img src="{{ book.image_url }}" alt="{{ book.title }} cover"
+                    style="max-width: 100px; margin-right: 10px;">
+                {% endif %}
+                <h3>{{ book.title }}</h3>
+                <p>Publication: {{ book.publication }}</p>
+                {% if book.available_copies %}
+                <p>Available Copies: {{ book.available_copies }}</p>
+                {% endif %}
+                <form action="/" method="POST">
+                    <input type="hidden" name="bib" value="{{ book.bib }}">
+                    <button class="save-button" type="submit">Save Book</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div style="margin-top: 30px;">
+            <a href="/">Back to Home</a>
+        </div>
+    </div>
+</body>
+
+</html>

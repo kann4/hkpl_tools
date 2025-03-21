@@ -1,5 +1,5 @@
 import sqlite3
-from beautifulsoup_testing import get_info
+from beautifulsoup import get_info
     
 def insertIntoTables(bib):
     info = get_info(bib)
@@ -176,10 +176,10 @@ def listOfLibraries():
         sqliteConnection = sqlite3.connect('hkpl_tools.db')
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite: getting list of libraries")
-        cursor.execute("SELECT englishName from Library ORDER BY libraryID ASC")
+        cursor.execute("SELECT englishName, libraryNumber from Library ORDER BY libraryID ASC")
         results = cursor.fetchall()
         # print(results)
-        libraries = [result[0] for result in results]
+        libraries = [{'englishName': result[0], 'libraryNumber': result[1]} for result in results]
         return libraries
     except sqlite3.Error as error:
         print('**************failed to get list of libraries', error,'**************************')
