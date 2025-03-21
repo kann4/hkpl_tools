@@ -58,7 +58,7 @@
         <select name="library" class="selectize">
             <option value="" disabled selected>Select library</option>
             {%for library in libraries%}
-            <option value="{{library}}" {% if selection == library %} selected {% endif %}>{{library}} Library</option>
+            <option value="{{library.englishName}}" {% if selection == library.englishName  %} selected {% endif %}>{{library.libraryNumber}}. {{library.englishName}} Library</option>
             {%endfor%}
         </select>
         <input type="submit" value="Confirm"> 
