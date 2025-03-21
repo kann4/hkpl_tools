@@ -40,6 +40,15 @@ def get_book_list(search_term):
                         book_info['publication'] = label.find_next_sibling('td').text.strip()
                     if label and label.text.strip() == 'Call Number':
                         book_info['call_number'] = label.find_next_sibling('td').text.strip()
+
+            # Extract availability
+            availability = record.find('span', class_='availabilityTotal')
+            if availability:
+                availability_text = availability.text.strip()
+                try:
+                    book_info['available_copies'] = int(availability_text.split()[0])
+                except (ValueError, IndexError):
+                    book_info['available_copies'] = 0
             
             # Extract title and ID
             title = record_highlight.find('a', class_='title')

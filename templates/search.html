@@ -64,6 +64,9 @@
                 {% endif %}
                 <h3>{{ book.title }}</h3>
                 <p>Publication: {{ book.publication }}</p>
+                {% if book.available_copies %}
+                <p>Available Copies: {{ book.available_copies }}</p>
+                {% endif %}
                 <form action="/" method="POST">
                     <input type="hidden" name="bib" value="{{ book.bib }}">
                     <button class="save-button" type="submit">Save Book</button>
