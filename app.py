@@ -87,15 +87,18 @@ def search_books():
 
 @app.route("/Saved_Books", methods=['GET','POST'])
 def savedBooks():
-
     if request.method == 'GET':
         table = getBookTable()
         return render_template('books.html', column_names=table[0], books=table[1])
-    if request.method == 'POST' and 'book_ids' in request.form:
+    if request.method == 'POST':
         book_ids = request.form.getlist('book_ids')
-        delBook(book_ids)
+        if book_ids:
+            delBook(book_ids)
+            msg = f'{book_ids} has been deleted'
+        else:
+            msg = 'No books selected for deletion'
         table = getBookTable()
-        return render_template('books.html', column_names=table[0], books=table[1], msg=f'{book_ids} has been deleted')
+        return render_template('books.html', column_names=table[0], books=table[1], msg=msg)
 @app.route('/user_guide')
 def user_guide():
     return render_template('user_guide.html')
