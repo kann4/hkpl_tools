@@ -9,14 +9,27 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 libraries = listOfLibraries()
+# add attr "fav" to lib1, lib2
+fav_libraries = ['Quarry Bay', 'Sham Shui Po', 'Po On Road']
+for lib in libraries:
+    if lib['englishName'] in fav_libraries:
+        lib['fav'] = 1
 
 def get_last_update_text(lastupdate):
     return f'Last Update: {lastupdate}'
+
+# Custom filter to sort libraries by multiple attributes
+@app.template_filter('sort_by')
+def sort_by(collection, *attributes):
+    # Sort the collection based on the provided attributes
+    return sorted(collection, key=lambda x: tuple(x[attr] if attr in x else 9999 for attr in attributes))
+
 
 @app.route("/", methods=['POST', 'GET'])
 def home():
     try:
         lastupdate = lastUpdate()
+        form_type = request.form.get('form_type')
         if request.method == 'GET':        
             return render_template('index.html', lastupdate=get_last_update_text(lastupdate), libraries=libraries)
         if request.method == 'POST':
@@ -41,7 +54,15 @@ def home():
                 print('finish getCopies')
                 # print(copies)
                 library_msg = f'{len(copies)} copies available in {library} Library'
-                return render_template('index.html', copies=copies, library_msg=library_msg, lastupdate=get_last_update_text(lastupdate), libraries=libraries, selection=library)
+                libraries_to_remove = request.form.getlist('libraryToRemove')
+                print(libraries_to_remove)
+                return render_template('index.html', copies=copies, library_msg=library_msg, lastupdate=get_last_update_text(lastupdate), libraries=libraries, selection=library, libraries_to_remove=libraries_to_remove)
+            # elif form_type == 'library_removal':
+            #     # get list of cheeckbox that are checked
+            #     libraries_to_remove = request.form.getlist('libraryToRemove')
+            #     print(libraries_to_remove)
+            #     print(request.form)
+            #     return render_template('index.html', libraries_to_remove=libraries_to_remove, libraries=libraries, selection=library)
             else:    #update
                 books_failed_to_update = updateCopies()
                 if books_failed_to_update == []:

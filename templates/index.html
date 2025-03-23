@@ -43,6 +43,13 @@
             width: auto !important;
             max-width: calc(100vw - 300px);
         }
+
+        .checkbox-container {
+            border: 2px solid #ccc;
+            width: 300px;
+            height: 100px;
+            overflow-y: scroll;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script language="javascript" type="text/javascript">
@@ -92,7 +99,19 @@
             {%endfor%}
         </select>
         <input type="submit" value="Confirm">
+        <!-- <input type="hidden" name="form_type" value="library_removal"> -->
+        <div class="checkbox-container">
+            <!-- <input type="checkbox" /> This is checkbox <br /> -->
+            {%for library in libraries | sort_by('fav')%}
+            <input type="checkbox" name="libraryToRemove" value="{{library.englishName}}" {% if library.englishName in
+                libraries_to_remove %} checked {% endif %}>
+            {{library.libraryNumber}}. {{library.englishName}} Library
+            <br />
+            {%endfor%}
+        </div>
+        <!-- <input type="submit" value="Filter"> -->
     </form>
+
 
     <table id="tableBookInLibrary">
         <caption>{{library_msg}}</caption>
