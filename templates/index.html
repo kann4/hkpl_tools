@@ -48,6 +48,9 @@
     <script language="javascript" type="text/javascript">
         function removeSpaces(string) { return string.split(' ').join(''); }
     </script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css" />
+
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
 </head>
 
 <body>
@@ -91,22 +94,26 @@
         <input type="submit" value="Confirm">
     </form>
 
-    <table>
+    <table id="tableBookInLibrary">
         <caption>{{library_msg}}</caption>
-        <tr>
-            <th>book title</th>
-            <th>call number</th>
-            <th>status</th>
-            <th>collection</th>
-        </tr>
-        {%for copy in copies%}
-        <tr>
-            <td>{{copy[0]}}</td>
-            <td>{{copy[1]}}</td>
-            <td>{{copy[2]}}</td>
-            <td>{{copy[3]}}</td>
-        </tr>
-        {%endfor%}
+        <thead>
+            <tr>
+                <th>book title</th>
+                <th>call number</th>
+                <th>status</th>
+                <th>collection</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for copy in copies%}
+            <tr>
+                <td>{{copy[0]}}</td>
+                <td>{{copy[1]}}</td>
+                <td>{{copy[2]}}</td>
+                <td>{{copy[3]}}</td>
+            </tr>
+            {%endfor%}
+        </tbody>
     </table>
     <span>{{error_msg}}</span>
 
@@ -147,6 +154,12 @@
                 const newWidth = Math.min(maxWidth + 40, window.innerWidth - 300);
                 selectize.$control.css('width', newWidth + 'px');
                 selectize.$dropdown.css('width', newWidth + 'px');
+            });
+        });
+
+        $(document).ready(function () {
+            $('#tableBookInLibrary').DataTable({
+                paging: false,
             });
         });
     </script>
