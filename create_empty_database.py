@@ -40,7 +40,7 @@ create_table2 = '''CREATE TABLE "BookCopy" (
 
 create_table3 = '''CREATE TABLE "Library" (
                         "libraryID"	INTEGER NOT NULL UNIQUE,
-                        "libraryNumber"	TEXT,
+                        "libraryNumber"	INTEGER NOT NULL,
                         "chineseName"	TEXT,
                         "englishName"	TEXT,
                         "lastUpdateDate"	TEXT,
