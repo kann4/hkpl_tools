@@ -63,9 +63,9 @@ def get_book_list(search_term):
                 books.append(book_info)
             
     # write bs.contents to file
-    with open('output.html', 'w', encoding='utf-8') as f:
-        f.write(str(bs.contents))# print(bs.prettify())  # This will print the prettified HTML to the console
+    # with open('output.html', 'w', encoding='utf-8') as f:
+    #     f.write(str(bs.contents))# print(bs.prettify())  # This will print the prettified HTML to the console
     # You can also write the prettified HTML to a file if needed
-    with open('output_prettified.html', 'w', encoding='utf-8') as f:
-        f.write(bs.prettify())  # This will write the prettified HTML to a file
+    # with open('output_prettified.html', 'w', encoding='utf-8') as f:
+    #     f.write(bs.prettify())  # This will write the prettified HTML to a file
     return books
