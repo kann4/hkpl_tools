@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from inserting_data_to_db import insertIntoTables, getCopies, updateCopies, lastUpdate, getBookTable, listOfLibraries, delBook
+from db import insertIntoTables, getCopies, updateCopies, lastUpdate, getBookTable, listOfLibraries, delBook
 import datetime
 import logging
 from urllib.parse import urlparse, parse_qs

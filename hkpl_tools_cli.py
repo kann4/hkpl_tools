@@ -1,6 +1,6 @@
 import sys
 import time
-from inserting_data_to_db import insertIntoTables
+from db import insertIntoTables
 
 if len(sys.argv) >= 2:
     for i in range(len(sys.argv)):
