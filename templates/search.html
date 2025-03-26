@@ -49,7 +49,7 @@
     <div class="search-container">
         <h1>Search Books</h1>
 
-        <form class="search-form" action="/search" method="post">
+        <form class="search-form" action="./search" method="post">
             <input type="text" name="search_term" placeholder="Enter book title or author" value="{{ search_term }}">
             <button type="submit">Search</button>
         </form>
@@ -67,7 +67,7 @@
                 {% if book.available_copies %}
                 <p>Available Copies: {{ book.available_copies }}</p>
                 {% endif %}
-                <form action="/" method="POST">
+                <form action="./" method="POST">
                     <input type="hidden" name="bib" value="{{ book.bib }}">
                     <button class="save-button" type="submit">Save Book</button>
                 </form>
@@ -77,7 +77,10 @@
         {% endif %}
 
         <div style="margin-top: 30px;">
-            <a href="/">Back to Home</a>
+            <!-- <a href="../index.html">Back to Home</a> -->
+            <a href="./">Back to Home</a>
+            <!-- <a href="/index.html">Back to Home</a> -->
+            <!-- <a href="">Back to Home</a> -->
         </div>
     </div>
 </body>
