@@ -69,13 +69,13 @@
         </div>
         <!-- sgisdghl -->
     </header>
-    <form action="/search" method="post">
+    <form action="search" method="post">
         <!-- <a href="/search">Search Books</a> -->
         <input type="text" name="search_term" placeholder="Enter book title or author">
         <input type="submit" value="Search">
     </form>
 
-    <form action="/" method="post">
+    <form action="" method="post">
         BIB:
         <input type="text" name="bib" placeholder="e.g. 003377312" onblur="this.value=removeSpaces(this.value);">
         <input type="submit" value="Save Book">
@@ -84,12 +84,12 @@
 
     <a href="{{('Saved_Books')}}">View Saved Books</a>
 
-    <form action="/" method="POST">
+    <form action="" method="POST">
         <span>{{lastupdate}}</span>
         <input type="submit" value="Update Copies"><span> {{update_msg}}</span>
     </form>
 
-    <form action="/" method="POST">
+    <form action="" method="POST">
         <label style="font-weight: bold;">Check Library</label>
         <select name="library" class="selectize">
             <option value="" disabled selected>Select library</option>
