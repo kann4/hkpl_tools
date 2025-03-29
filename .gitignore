@@ -6,3 +6,6 @@ notes.txt
 .vscode/
 *.db
 .history
+.venv*
+venv
+*.sqbpro
