@@ -49,13 +49,13 @@ def home():
                 # if request.form['library'] == '':
                 #     return render_template('index.html', lastupdate=get_last_update_text(lastupdate), error_msg = 'please select a library', libraries=libraries)
                 library = request.form['library']
+                libraries_to_remove = request.form.getlist('libraryToRemove')
                 print(library)
-                copies = getCopies(library)
+                copies = getCopies(library, libraries_to_remove)
                 print('finish getCopies')
                 # print(copies)
                 library_msg = f'{len(copies)} copies available in {library} Library'
-                libraries_to_remove = request.form.getlist('libraryToRemove')
-                print(libraries_to_remove)
+                # print(libraries_to_remove)
                 return render_template('index.html', copies=copies, library_msg=library_msg, lastupdate=get_last_update_text(lastupdate), libraries=libraries, selection=library, libraries_to_remove=libraries_to_remove)
             # elif form_type == 'library_removal':
             #     # get list of cheeckbox that are checked
