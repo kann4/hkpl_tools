@@ -49,23 +49,38 @@ def insertIntoTables(bib):
             sqliteConnection.close()
             print("The SQLite connection is closed")
 
-def getCopies(library_name):   #get copies availabe in certain libraary
+def getCopies(library_name, libraries_to_remove):   #get copies availabe in certain libraary
     try:
         sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite, getting copies from db...")
 
-        library_ID = getLibraryID(cursor, library_name)
-        sqlite_select_query = """SELECT bookID, status, collection from bookCopy where libraryID = ?"""
-        cursor.execute(sqlite_select_query, (library_ID,))
+        # library_ID = getLibraryID(cursor, library_name)
+        # sqlite_select_query = """SELECT bookID, status, collection from bookCopy where libraryID = ?"""
+        sqlite_select_query = f"""
+        select  
+        bookName, callNumber, status, collection
+        from BookCopy
+        join book on bookCopy.bookID = book.bookID
+        JOIN Library on BookCopy.libraryID = Library.libraryID
+        where library.englishName = ?    
+        AND BookCopy.bookID NOT IN (
+            select DISTINCT bookID
+            from BookCopy
+            JOIN Library on BookCopy.libraryID = Library.libraryID
+            where library.englishName in ({','.join('?'*len(libraries_to_remove))})
+        );
+        """ 
+
+        cursor.execute(sqlite_select_query, (library_name, *libraries_to_remove)) # (library_name,) + tuple(libraries_to_remove)
         copies = cursor.fetchall()
-        copies = [list(elem) for elem in copies]
-        for copy in copies:
-            sqlite_select_query = """SELECT bookName, callNumber from Book where bookID = ?"""
-            cursor.execute(sqlite_select_query, (copy[0],))
-            x = cursor.fetchone()
-            copy[0] = x[0]
-            copy.insert(1,x[1])
+        # copies = [list(elem) for elem in copies]
+        # for copy in copies:
+        #     sqlite_select_query = """SELECT bookName, callNumber from Book where bookID = ?"""
+        #     cursor.execute(sqlite_select_query, (copy[0],))
+        #     x = cursor.fetchone()
+        #     copy[0] = x[0]
+        #     copy.insert(1,x[1])
         return copies
     except sqlite3.Error as error:
         print('**************failed to get copies', error,'**************************')
