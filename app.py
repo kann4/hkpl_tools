@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request
-from original_src.db import insertIntoTables, getCopies, updateCopies, lastUpdate, listOfLibraries
-from book_service import getBookTable, delBook
+from original_src.db import getCopies, updateCopies, lastUpdate, listOfLibraries
+from book_service import getBookTable, delBook, add_book_by_bib_or_url
 import datetime
 import logging
-from urllib.parse import urlparse, parse_qs
 from hkpl_service import get_book_list
 
 app = Flask(__name__)
@@ -35,16 +34,8 @@ def home():
             return render_template('index.html', lastupdate=get_last_update_text(lastupdate), libraries=libraries)
         if request.method == 'POST':
             if 'bibOrUrl' in request.form:
-                bibOrUrl = request.form['bibOrUrl']
-                # Try Parse bib as URL
-                parsed_url = urlparse(bibOrUrl)
-                query_params = parse_qs(parsed_url.query) # Extract the query string
-                id_value = query_params.get('id', [None])[0] # Get the 'id' parameter: should be in format "chamo:3655993"
-                id = id_value.split(':')[-1] if id_value else None # Extract the numeric part after the colon)
-                bib = id if id else bibOrUrl # Use the extracted ID if available, otherwise use the original bib value
-                # End of parsing bib as URL
-                print(bib) # Print the final bib value to be used
-                message = insertIntoTables(bib)
+                bib_or_url = request.form['bibOrUrl']
+                message = add_book_by_bib_or_url(bib_or_url) 
                 return render_template('index.html',save_msg=f'{message}', lastupdate=get_last_update_text(lastupdate), libraries=libraries)
             elif 'library' in request.form: 
                 # if request.form['library'] == '':
