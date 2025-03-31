@@ -143,6 +143,7 @@ def get_copy_info(bs: BeautifulSoup):
     return copies
 
 def get_search_url(search_term):
+    url_template = 'https://webcat.hkpl.gov.hk/search/query?term_1={search_term}&theme=WEB&locale=en'
     return url_template.format(search_term=urllib.parse.quote(search_term))
 
 def get_book_list(search_term):
