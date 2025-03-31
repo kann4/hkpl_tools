@@ -1,13 +1,13 @@
-from flask import Flask, render_template, request
-from book_service import getBookTable, delBook, add_book_by_bib_or_url, updateCopies, lastUpdate, listOfLibraries, getCopies
 import datetime
 import logging
+from flask import Flask, render_template, request
+from book_service import get_book_table, del_book, add_book_by_bib_or_url, update_copies, get_last_update, get_list_of_libraries, get_copies
 from hkpl_service import get_book_list
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
-libraries = listOfLibraries()
+libraries = get_list_of_libraries()
 # add attr "fav" to lib1, lib2
 fav_libraries = ['Quarry Bay', 'Sham Shui Po', 'Po On Road']
 for lib in libraries:
@@ -31,7 +31,7 @@ def sort_by(collection, *attributes):
 @app.route("/", methods=['POST', 'GET'])
 def home():
     try:
-        lastupdate = lastUpdate()
+        lastupdate = get_last_update()
         # form_type = request.form.get('form_type')
         if request.method == 'GET':
             return render_template('index.html',
@@ -52,7 +52,7 @@ def home():
                 library = request.form['library']
                 libraries_to_remove = request.form.getlist('libraryToRemove')
                 print(library)
-                copies = getCopies(library, libraries_to_remove)
+                copies = get_copies(library, libraries_to_remove)
                 print('finish getCopies')
                 # print(copies)
                 library_msg = f'{len(copies)} copies available in {library} Library'
@@ -72,9 +72,9 @@ def home():
             #     print(request.form)
             #     return render_template('index.html', libraries_to_remove=libraries_to_remove, libraries=libraries, selection=library)
             elif 'btnUpdate' in request.form:  #update
-                books_failed_to_update = updateCopies()
+                books_failed_to_update = update_copies()
                 # books_failed_to_update = []
-                if books_failed_to_update == []:
+                if not books_failed_to_update:
                     update_msg = f'Update successful at {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.'
                 else:
                     update_msg = f'The following books: {books_failed_to_update} has failed to update.'
@@ -123,20 +123,20 @@ def search_books():
 
 
 @app.route("/Saved_Books", methods=['GET', 'POST'])
-def savedBooks():
+def saved_books():
     if request.method == 'GET':
-        table = getBookTable()
+        table = get_book_table()
         return render_template('books.html',
                                column_names=table[0],
                                books=table[1])
     if request.method == 'POST':
         book_ids = request.form.getlist('book_ids')
         if book_ids:
-            delBook(book_ids)
+            del_book(book_ids)
             msg = f'{book_ids} has been deleted'
         else:
             msg = 'No books selected for deletion'
-        table = getBookTable()
+        table = get_book_table()
         return render_template('books.html',
                                column_names=table[0],
                                books=table[1],

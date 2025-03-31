@@ -22,11 +22,11 @@ def convert_to_bib(bib_or_url):
         'id',
         [None
          ])[0]  # Get the 'id' parameter: should be in format "chamo:3655993"
-    id = id_value.split(
+    _id = id_value.split(
         ':'
     )[-1] if id_value else None  # Extract the numeric part after the colon)
     # End of parsing bib as URL
-    bib = id if id else bib_or_url  # Use the extracted ID if available, otherwise use the original bib value
+    bib = _id if _id else bib_or_url  # Use the extracted ID if available, otherwise use the original bib value
     return bib
 
 
@@ -37,25 +37,25 @@ def add_book_by_bib_or_url(bib_or_url):
     return message
 
 
-def getCopies(target_library, unwanted_libraries):
+def get_copies(target_library, unwanted_libraries):
     return db_getCopies(target_library, unwanted_libraries)
 
 
-def updateCopies():
+def update_copies():
     return db_updateCopies()
 
 
-def lastUpdate():
+def get_last_update():
     return db_lastUpdate()
 
 
-def getBookTable():
+def get_book_table():
     return db_getBookTable()
 
 
-def delBook(book_ids):
+def del_book(book_ids):
     return db_delBook(book_ids)
 
 
-def listOfLibraries():
+def get_list_of_libraries():
     return db_listOfLibraries()

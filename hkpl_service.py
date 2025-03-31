@@ -85,7 +85,7 @@ def get_book_info(bs: BeautifulSoup):
     return book
 
 
-def get_value(table_book, book_info_type, table_found=[False]):
+def get_value(table_book, book_info_type):
     """
     Retrieves the value of a book information type from a parsed HTML content of a book's webpage.
 
@@ -102,10 +102,10 @@ def get_value(table_book, book_info_type, table_found=[False]):
     """
     td = table_book.find(
         'td', string=book_info_type)  #tdre where item name is placed
-    if td != None:
+    if td is not None:
         book_info = td.find_next_sibling(
             'td').string  #next td is the value of the item
-        if book_info == None:  #sometimes the info has > 1 line. td is empty. Those info are placed in the divs inside that td
+        if book_info is None:  #sometimes the info has > 1 line. td is empty. Those info are placed in the divs inside that td
             book_info = ''
             divs = td.find_next_sibling('td').find_all('div')
             for div in divs:
@@ -133,8 +133,8 @@ def get_copy_info(bs: BeautifulSoup):
     copies = []
     for i in range(len(trs)):
         copies.append([])
-    for i in range(len(trs)):
-        divs = trs[i].find_all('div')
+    for i, tr in enumerate(trs):
+        divs = tr.find_all('div')
         library = divs[0].string[4:].rstrip()
         status = divs[3].string
         collection = divs[4].string
