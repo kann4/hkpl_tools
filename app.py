@@ -64,8 +64,9 @@ def home():
             #     print(libraries_to_remove)
             #     print(request.form)
             #     return render_template('index.html', libraries_to_remove=libraries_to_remove, libraries=libraries, selection=library)
-            else:    #update
-                books_failed_to_update = updateCopies()
+            elif 'btnUpdate' in request.form:    #update
+                # books_failed_to_update = updateCopies()
+                books_failed_to_update = []
                 if books_failed_to_update == []:
                     update_msg = f'Update successful at {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.'
                 else:
