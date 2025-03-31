@@ -20,6 +20,7 @@
   - concurrent http request
 - better filter eg. allow per column filter, dropdown instead of textbox
 - better way to do fav_libraries
+- add foreign keys
 - (DONE) in library lookup, allow removing books that are also available in another library
 - (NO NEED) maintain single db connection?
 - decouple frontend and backend?
