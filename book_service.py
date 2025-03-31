@@ -7,11 +7,11 @@
 4. get last update date
 5. get all saved books
 6. delete saved book
-7. search books on hkpl by search_term
+7. get list of libraries
 """
 from urllib.parse import urlparse, parse_qs
 from original_src.db import getBookTable as db_getBookTable, delBook as db_delBook, \
-  insertIntoTables
+  insertIntoTables, updateCopies as db_updateCopies, lastUpdate as db_lastUpdate, listOfLibraries as db_listOfLibraries, getCopies as db_getCopies
 
 def convert_to_bib(bib_or_url):
     # Try Parse bib as URL
@@ -29,8 +29,20 @@ def add_book_by_bib_or_url(bib_or_url):
     message = insertIntoTables(bib)
     return message
 
+def getCopies(target_library, unwanted_libraries):
+   return db_getCopies(target_library, unwanted_libraries)
+
+def updateCopies():
+    return db_updateCopies()
+
+def lastUpdate():
+    return db_lastUpdate()
+
 def getBookTable():
     return db_getBookTable()
 
 def delBook(book_ids):
     return db_delBook(book_ids)
+
+def listOfLibraries():
+    return db_listOfLibraries()

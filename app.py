@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
-from original_src.db import getCopies, updateCopies, lastUpdate, listOfLibraries
-from book_service import getBookTable, delBook, add_book_by_bib_or_url
+from book_service import getBookTable, delBook, add_book_by_bib_or_url, updateCopies, lastUpdate, listOfLibraries, getCopies
 import datetime
 import logging
 from hkpl_service import get_book_list
@@ -56,8 +55,8 @@ def home():
             #     print(request.form)
             #     return render_template('index.html', libraries_to_remove=libraries_to_remove, libraries=libraries, selection=library)
             elif 'btnUpdate' in request.form:    #update
-                # books_failed_to_update = updateCopies()
-                books_failed_to_update = []
+                books_failed_to_update = updateCopies()
+                # books_failed_to_update = []
                 if books_failed_to_update == []:
                     update_msg = f'Update successful at {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.'
                 else:
