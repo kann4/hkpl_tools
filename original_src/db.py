@@ -1,5 +1,5 @@
 import sqlite3
-from beautifulsoup import get_info
+from .beautifulsoup import get_info
 import config
 
 def get_db_connection():

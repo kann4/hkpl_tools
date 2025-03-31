@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request
-from db import insertIntoTables, getCopies, updateCopies, lastUpdate, getBookTable, listOfLibraries, delBook
+from original_src.db import insertIntoTables, getCopies, updateCopies, lastUpdate, getBookTable, listOfLibraries, delBook
 import datetime
 import logging
 from urllib.parse import urlparse, parse_qs
-from book_lookup import get_book_list
+from original_src.book_lookup import get_book_list
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
