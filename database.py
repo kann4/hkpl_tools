@@ -14,6 +14,7 @@ from contextlib import contextmanager
 import config
 import data_model
 
+
 @contextmanager
 def get_db_connection(db_path=config.DB_PATH):
     connection = sqlite3.connect(db_path)
@@ -22,32 +23,39 @@ def get_db_connection(db_path=config.DB_PATH):
     finally:
         connection.close()
 
+
 def insert_book(book: data_model.BookModel):
     with get_db_connection() as sqliteConnection:
-      pass # todo: implement
+        pass  # todo: implement
 
-def insert_book_copies(
-  book_copies: list[data_model.BookCopyModel]
-):
-    with get_db_connection() as sqliteConnection:
-      pass # todo: implement
 
-def get_available_books(library_name: str, libraries_to_remove: list[str]) -> list[data_model.BookCopyModel]:
+def insert_book_copies(book_copies: list[data_model.BookCopyModel]):
     with get_db_connection() as sqliteConnection:
-      pass # todo: implement
+        pass  # todo: implement
+
+
+def get_available_books(
+        library_name: str,
+        libraries_to_remove: list[str]) -> list[data_model.BookCopyModel]:
+    with get_db_connection() as sqliteConnection:
+        pass  # todo: implement
+
 
 def update_book_copies(book_copies: list[data_model.BookCopyModel]):
     with get_db_connection() as sqliteConnection:
-      pass # todo: implement
+        pass  # todo: implement
+
 
 def get_last_update_date_str() -> str:
     with get_db_connection() as sqliteConnection:
-      pass # todo: implement
+        pass  # todo: implement
+
 
 def get_all_saved_books() -> list[data_model.BookModel]:
     with get_db_connection() as sqliteConnection:
-      pass # todo: implement
+        pass  # todo: implement
+
 
 def delete_books(books: list[data_model.BookModel]):
     with get_db_connection() as sqliteConnection:
-      pass # todo: implement
+        pass  # todo: implement

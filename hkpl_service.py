@@ -100,10 +100,12 @@ def get_value(table_book, book_info_type, table_found=[False]):
     :return: The value of the specified book information type as a string.
     :rtype: str
     """
-    td = table_book.find('td', string=book_info_type)     #tdre where item name is placed
+    td = table_book.find(
+        'td', string=book_info_type)  #tdre where item name is placed
     if td != None:
-        book_info = td.find_next_sibling('td').string      #next td is the value of the item
-        if book_info == None:                               #sometimes the info has > 1 line. td is empty. Those info are placed in the divs inside that td
+        book_info = td.find_next_sibling(
+            'td').string  #next td is the value of the item
+        if book_info == None:  #sometimes the info has > 1 line. td is empty. Those info are placed in the divs inside that td
             book_info = ''
             divs = td.find_next_sibling('td').find_all('div')
             for div in divs:
@@ -142,14 +144,17 @@ def get_copy_info(bs: BeautifulSoup):
         ]
     return copies
 
+
 def get_search_url(search_term):
     url_template = 'https://webcat.hkpl.gov.hk/search/query?term_1={search_term}&theme=WEB&locale=en'
     return url_template.format(search_term=urllib.parse.quote(search_term))
 
+
 def get_book_list(search_term):
     url = get_search_url(search_term)
     try:
-        response = urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent': 'Mozilla/5.0'}))
+        response = urllib.request.urlopen(
+            urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'}))
     except urllib.request.HTTPError as e:
         print(e)
         return f'Error. "{url}" cannot be reached. Check hkpl web or bib exist.'
@@ -157,7 +162,7 @@ def get_book_list(search_term):
     htmlbytes = response.read()
     bs = BeautifulSoup(htmlbytes, "html.parser")
     books = []
-    
+
     # Extract book information
     records = bs.find_all('li', class_='record')
     for record in records:
@@ -166,29 +171,32 @@ def get_book_list(search_term):
         if record_highlight:
             # Extract publication and call number
             item_fields = record_highlight.find('div', class_='itemFields')
-            
+
             # Extract image URL
             img_tag = record.find('div', class_='recordImage').find('img')
             if img_tag and img_tag.get('src'):
                 book_info['image_url'] = img_tag['src']
-            
+
             if item_fields:
                 for row in item_fields.find_all('tr'):
                     label = row.find('td', class_='label')
                     if label and label.text.strip() == 'Publication':
-                        book_info['publication'] = label.find_next_sibling('td').text.strip()
+                        book_info['publication'] = label.find_next_sibling(
+                            'td').text.strip()
                     if label and label.text.strip() == 'Call Number':
-                        book_info['call_number'] = label.find_next_sibling('td').text.strip()
+                        book_info['call_number'] = label.find_next_sibling(
+                            'td').text.strip()
 
             # Extract availability
             availability = record.find('span', class_='availabilityTotal')
             if availability:
                 availability_text = availability.text.strip()
                 try:
-                    book_info['available_copies'] = int(availability_text.split()[0])
+                    book_info['available_copies'] = int(
+                        availability_text.split()[0])
                 except (ValueError, IndexError):
                     book_info['available_copies'] = 0
-            
+
             # Extract title and ID
             title = record_highlight.find('a', class_='title')
             if title:
@@ -196,11 +204,12 @@ def get_book_list(search_term):
                 # Extract ID from href
                 href = title.get('href')
                 if href:
-                    book_info['bib'] = href.split('id=')[1].split('&')[0].split(':')[1] if 'id=' in href else None
-            
+                    book_info['bib'] = href.split('id=')[1].split(
+                        '&')[0].split(':')[1] if 'id=' in href else None
+
             if book_info:  # Only add if we have complete information
                 books.append(book_info)
-            
+
     # write bs.contents to file
     # with open('output.html', 'w', encoding='utf-8') as f:
     #     f.write(str(bs.contents))# print(bs.prettify())  # This will print the prettified HTML to the console

@@ -1,13 +1,15 @@
 from dataclasses import dataclass
 from typing import Optional
 
+
 @dataclass
 class LibraryModel:
-  libraryID: int
-  englishName: str = ""
-  chineseName: str = ""
-  creationDate: Optional[str] = None
-  lastUpdateDate: Optional[str] = None
+    libraryID: int
+    englishName: str = ""
+    chineseName: str = ""
+    creationDate: Optional[str] = None
+    lastUpdateDate: Optional[str] = None
+
 
 @dataclass
 class BookModel:
@@ -28,6 +30,7 @@ class BookModel:
     creationDate: Optional[str] = None
     lastUpdateDate: Optional[str] = None
 
+
 @dataclass
 class BookCopyModel:
     bookCopyID: int
@@ -38,4 +41,3 @@ class BookCopyModel:
     collection: Optional[str] = None
     creationDate: Optional[str] = None
     lastUpdateDate: Optional[str] = None
-    
