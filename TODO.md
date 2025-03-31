@@ -15,9 +15,13 @@
 - better loading UI eg. when updating 
   - disable button 
   - show progress
-- in library lookup, allow removing books that are also available in another library
+- more efficient update
+  - partial update based on selected library
+  - concurrent http request
 - better filter eg. allow per column filter, dropdown instead of textbox
-- maintain single db connection?
+- better way to do fav_libraries
+- (DONE) in library lookup, allow removing books that are also available in another library
+- (NO NEED) maintain single db connection?
 - decouple frontend and backend?
 
 
