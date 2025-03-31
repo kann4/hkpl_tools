@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
-from original_src.db import insertIntoTables, getCopies, updateCopies, lastUpdate, getBookTable, listOfLibraries, delBook
+from original_src.db import insertIntoTables, getCopies, updateCopies, lastUpdate, listOfLibraries
+from book_service import getBookTable, delBook
 import datetime
 import logging
 from urllib.parse import urlparse, parse_qs

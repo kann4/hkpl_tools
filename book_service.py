@@ -9,3 +9,10 @@
 6. delete saved book
 7. search books on hkpl by search_term
 """
+from original_src.db import getBookTable as db_getBookTable, delBook as db_delBook
+
+def getBookTable():
+    return db_getBookTable()
+
+def delBook(book_ids):
+    return db_delBook(book_ids)
