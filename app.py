@@ -30,18 +30,18 @@ def sort_by(collection, *attributes):
 def home():
     try:
         lastupdate = lastUpdate()
-        form_type = request.form.get('form_type')
+        # form_type = request.form.get('form_type')
         if request.method == 'GET':        
             return render_template('index.html', lastupdate=get_last_update_text(lastupdate), libraries=libraries)
         if request.method == 'POST':
-            if 'bib' in request.form:
-                bib = request.form['bib']
+            if 'bibOrUrl' in request.form:
+                bibOrUrl = request.form['bibOrUrl']
                 # Try Parse bib as URL
-                parsed_url = urlparse(bib)
+                parsed_url = urlparse(bibOrUrl)
                 query_params = parse_qs(parsed_url.query) # Extract the query string
                 id_value = query_params.get('id', [None])[0] # Get the 'id' parameter: should be in format "chamo:3655993"
                 id = id_value.split(':')[-1] if id_value else None # Extract the numeric part after the colon)
-                bib = id if id else bib # Use the extracted ID if available, otherwise use the original bib value
+                bib = id if id else bibOrUrl # Use the extracted ID if available, otherwise use the original bib value
                 # End of parsing bib as URL
                 print(bib) # Print the final bib value to be used
                 message = insertIntoTables(bib)
