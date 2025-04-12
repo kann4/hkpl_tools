@@ -70,7 +70,7 @@
                 <p>Available Copies: {{ book.available_copies }}</p>
                 {% endif %}
                 <form action="./" method="POST">
-                    <input type="hidden" name="bib" value="{{ book.bib }}">
+                    <input type="hidden" name="bibOrUrl" value="{{ book.bib }}">
                     <button class="save-button" type="submit">Save Book</button>
                 </form>
             </div>
