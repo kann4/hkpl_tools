@@ -64,7 +64,7 @@ def getCopies(library_name,
         # sqlite_select_query = """SELECT bookID, status, collection from bookCopy where libraryID = ?"""
         sqlite_select_query = f"""
         select  
-        bookName, callNumber, status, collection
+        bookName, callNumber, status, collection, book.bookID, book.bibID
         from BookCopy
         join book on bookCopy.bookID = book.bookID
         JOIN Library on BookCopy.libraryID = Library.libraryID
@@ -98,17 +98,31 @@ def getCopies(library_name,
             print("The SQLite connection is closed")
 
 
-def updateCopies():
+def get_book_id_and_bib_id():
+    try:
+        sqliteConnection = get_db_connection()
+        cursor = sqliteConnection.cursor()
+        print("Connected to SQLite: Begin to get bookID and bibID...")
+        sqlite_select_query = """SELECT bookID, bibID from Book ORDER BY bookID"""
+        cursor.execute(sqlite_select_query)
+        bookID_bibID = cursor.fetchall(
+        )  #running cursor.fetchall twice will fetch nothing in second time
+        return bookID_bibID
+    except sqlite3.Error as error:
+        print('**************failed to get bookID and bibID', error,
+              '**************************')
+    finally:
+        if sqliteConnection:
+            sqliteConnection.close()
+            print("The SQLite connection is closed")
+
+def updateCopies(bookID_bibID):
     try:
         sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite: Begin to update copies...")
 
-        sqlite_select_query = """SELECT bookID, bibID from Book ORDER BY bookID"""
-        cursor.execute(sqlite_select_query)
         books_failed_to_update = []
-        bookID_bibID = cursor.fetchall(
-        )  #running cursor.fetchall twice will fetch nothing in second time
         for book_ID, bib in bookID_bibID:  # for item in <expression>:
             try:
                 sqlite_delete_query = "DELETE FROM BookCopy WHERE bookID = ?"

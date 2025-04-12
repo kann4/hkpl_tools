@@ -11,7 +11,7 @@
 """
 from urllib.parse import urlparse, parse_qs
 from original_src.db import getBookTable as db_getBookTable, delBook as db_delBook, \
-  insertIntoTables, updateCopies as db_updateCopies, lastUpdate as db_lastUpdate, listOfLibraries as db_listOfLibraries, getCopies as db_getCopies
+  insertIntoTables, updateCopies as db_updateCopies, lastUpdate as db_lastUpdate, listOfLibraries as db_listOfLibraries, getCopies as db_getCopies, get_book_id_and_bib_id
 
 
 def convert_to_bib(bib_or_url):
@@ -42,7 +42,8 @@ def get_copies(target_library, unwanted_libraries):
 
 
 def update_copies():
-    return db_updateCopies()
+    bookID_bibID = get_book_id_and_bib_id()
+    return db_updateCopies(bookID_bibID)
 
 
 def get_last_update():
