@@ -81,6 +81,12 @@ def home():
                 return render_template('index.html',
                                        update_msg=update_msg,
                                        libraries=libraries)
+            else:
+                print(request.form)
+                return render_template('index.html',
+                                       lastupdate=get_last_update_text(lastupdate),
+                                       libraries=libraries,
+                                       error_msg='An error occurred. Please try again.')
     except Exception as e:
         print(e)
         logging.exception(e)
