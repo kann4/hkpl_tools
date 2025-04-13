@@ -6,7 +6,7 @@
 ## Features
 - Add the book and available libraries to database
 
-
+flask run --host=0.0.0.0 --debug
 
 
 
