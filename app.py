@@ -1,7 +1,7 @@
 import datetime
 import logging
 from flask import Flask, render_template, request
-from book_service import get_book_table, del_book, add_book_by_bib_or_url, update_copies, get_last_update, get_list_of_libraries, get_copies
+from book_service import get_book_table, del_book, add_book_by_bib_or_url, update_all_copies, update_current_copies, get_last_update, get_list_of_libraries, get_copies
 from hkpl_service import get_book_list
 
 app = Flask(__name__)
@@ -38,6 +38,7 @@ def home():
                                    lastupdate=get_last_update_text(lastupdate),
                                    libraries=libraries)
         if request.method == 'POST':
+            print(request.form)
             if 'bibOrUrl' in request.form:
                 bib_or_url = request.form['bibOrUrl']
                 message = add_book_by_bib_or_url(bib_or_url)
@@ -46,7 +47,7 @@ def home():
                     save_msg=f'{message}',
                     lastupdate=get_last_update_text(lastupdate),
                     libraries=libraries)
-            elif 'library' in request.form:
+            elif 'btnLookup' in request.form: # 'library' in request.form:
                 # if request.form['library'] == '':
                 #     return render_template('index.html', lastupdate=get_last_update_text(lastupdate), error_msg = 'please select a library', libraries=libraries)
                 library = request.form['library']
@@ -71,9 +72,16 @@ def home():
             #     print(libraries_to_remove)
             #     print(request.form)
             #     return render_template('index.html', libraries_to_remove=libraries_to_remove, libraries=libraries, selection=library)
-            elif 'btnUpdate' in request.form:  #update
-                books_failed_to_update = update_copies()
-                # books_failed_to_update = []
+            elif 'btnUpdateAll' in request.form or 'btnUpdateCurrent' in request.form:  #update
+                if 'btnUpdateAll' in request.form:
+                    # books_failed_to_update = update_all_copies()
+                    pass
+                else: # btnUpdateCurrent
+                    library = request.form['library']
+                    libraries_to_remove = request.form.getlist('libraryToRemove')
+                    books_failed_to_update = update_current_copies(library, libraries_to_remove)
+                books_failed_to_update = []
+                
                 if not books_failed_to_update:
                     update_msg = f'Update successful at {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.'
                 else:

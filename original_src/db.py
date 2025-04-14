@@ -98,7 +98,7 @@ def getCopies(library_name,
             print("The SQLite connection is closed")
 
 
-def get_book_id_and_bib_id():
+def get_all_book_id_and_bib_id():
     try:
         sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()

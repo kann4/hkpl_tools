@@ -84,12 +84,19 @@
 
     <a href="{{('Saved_Books')}}">View Saved Books</a>
 
+    {% macro bookIdAndBibId(copies) -%}
+    {% for copy in copies %}
+        [{{copy[4]}},{{copy[5]}}],
+    {% endfor %}
+    {% endmacro %}
     <form action="" method="POST">
-        <span>{{lastupdate}}</span>
-        <input type="submit" name="btnUpdate" value="Update Copies"><span> {{update_msg}}</span>
-    </form>
-
-    <form action="" method="POST">
+        <div>
+            <span>{{lastupdate}}</span>
+            <input type="submit" name="btnUpdateAll" value="Update All Copies">
+            <input type="submit" name="btnUpdateCurrent" value="Update Current">
+            <span> {{update_msg}}</span>
+            <input type="hidden" name="form_type" value="[{{ bookIdAndBibId(copies) }}]">
+        </div>
         <label style="font-weight: bold;">Check Library</label>
         <select name="library" class="selectize">
             <option value="" disabled selected>Select library</option>
@@ -98,7 +105,7 @@
                 {{library.libraryNumber}}. {{library.englishName}} Library</option>
             {%endfor%}
         </select>
-        <input type="submit" value="Confirm">
+        <input type="submit" name="btnLookup" value="Confirm">
         <!-- <input type="hidden" name="form_type" value="library_removal"> -->
         <div class="checkbox-container">
             <!-- <input type="checkbox" /> This is checkbox <br /> -->

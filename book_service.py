@@ -11,7 +11,7 @@
 """
 from urllib.parse import urlparse, parse_qs
 from original_src.db import getBookTable as db_getBookTable, delBook as db_delBook, \
-  insertIntoTables, updateCopies as db_updateCopies, lastUpdate as db_lastUpdate, listOfLibraries as db_listOfLibraries, getCopies as db_getCopies, get_book_id_and_bib_id
+  insertIntoTables, updateCopies as db_updateCopies, lastUpdate as db_lastUpdate, listOfLibraries as db_listOfLibraries, getCopies as db_getCopies, get_all_book_id_and_bib_id
 
 
 def convert_to_bib(bib_or_url):
@@ -41,10 +41,16 @@ def get_copies(target_library, unwanted_libraries):
     return db_getCopies(target_library, unwanted_libraries)
 
 
-def update_copies():
-    bookID_bibID = get_book_id_and_bib_id()
+def update_all_copies():
+    bookID_bibID = get_all_book_id_and_bib_id()
     return db_updateCopies(bookID_bibID)
 
+def update_current_copies(target_library, unwanted_libraries):
+    bookID_bibID = [(copies[4],copies[5]) for copies in get_copies(target_library, unwanted_libraries)] # remove unused columns from copies
+    unique = list(set(bookID_bibID))
+    # print(bookID_bibID) # Print the list of bookID and bibID pairs to be updated
+    return db_updateCopies(unique)
+    
 
 def get_last_update():
     return db_lastUpdate()

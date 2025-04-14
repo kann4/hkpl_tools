@@ -1,4 +1,5 @@
 # Todo
+- bug: books in reserve libraries count as existing in those libraries for "unwanted"
 
 - use dictionary instead of list
 - soft delete
@@ -16,7 +17,7 @@
   - disable button 
   - show progress
 - more efficient update
-  - partial update based on selected library
+  - (done) partial update based on selected library
   - concurrent http request
 - better filter eg. allow per column filter, dropdown instead of textbox
 - better way to do fav_libraries
