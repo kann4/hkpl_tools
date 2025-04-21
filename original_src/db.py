@@ -234,13 +234,14 @@ def listOfLibraries():
         cursor = sqliteConnection.cursor()
         print("Connected to SQLite: getting list of libraries")
         cursor.execute(
-            "SELECT englishName, libraryNumber from Library ORDER BY libraryID ASC"
+            "SELECT libraryID, englishName, libraryNumber from Library ORDER BY libraryID ASC"
         )
         results = cursor.fetchall()
         # print(results)
         libraries = [{
-            'englishName': result[0],
-            'libraryNumber': result[1]
+            'libraryID': result[0],
+            'englishName': result[1],
+            'libraryNumber': result[2]
         } for result in results]
         return libraries
     except sqlite3.Error as error:
