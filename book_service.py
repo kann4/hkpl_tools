@@ -12,7 +12,7 @@
 from urllib.parse import urlparse, parse_qs
 from original_src.db import getBookTable as db_getBookTable, delBook as db_delBook, \
   insertIntoTables, updateCopies as db_updateCopies, lastUpdate as db_lastUpdate, listOfLibraries as db_listOfLibraries, getCopies as db_getCopies
-
+from hkpl_service import get_url_from_bib, get_htmlbytes, get_book_info, get_copies_info
 
 def convert_to_bib(bib_or_url):
     # Try Parse bib as URL
@@ -33,7 +33,13 @@ def convert_to_bib(bib_or_url):
 def add_book_by_bib_or_url(bib_or_url):
     bib = convert_to_bib(bib_or_url)  # Convert the input to bib
     print(bib)  # Print the final bib value to be used
-    message = insertIntoTables(bib)
+    url = get_url_from_bib(bib)
+    bs = get_htmlbytes(url)
+    if type(bs) is str:
+        return bs  # bs is the error msg if url cannot reach
+    book = get_book_info(bs)
+    copies = get_copies_info(bs)
+    message = insertIntoTables(book, copies)
     return message
 
 
