@@ -7,12 +7,7 @@ def get_db_connection():
     return sqlite3.connect(config.DB_PATH)
 
 
-def insertIntoTables(bib):
-    info = get_info(bib)
-    if type(info) is str:
-        return info  # type(info) is str if error occur during getting book info. Return value of get_info() will be the error msg.
-    book = info[0]
-    copies = info[1]
+def insertIntoTables(book, copies):
     try:
         sqliteConnection = get_db_connection()
         cursor = sqliteConnection.cursor()
@@ -29,18 +24,18 @@ def insertIntoTables(bib):
         insertCopies(book_ID, copies, cursor)
         sqliteConnection.commit()
         cursor.close()
-        msg = f"{book[0]} / {bib} is added successfully into the database"
+        msg = f"{book[0]} / {book[2]} is added successfully into the database"
         print(msg)
         return msg
 
     except sqlite3.Error as error:
         if str(error) == 'UNIQUE constraint failed: Book.standardNumber':
-            msg = f'{bib} ({book[0]}) is already in the database. (error: UNIQUE constraint failed: Book.standardNumber)'
+            msg = f'{book[2]} ({book[0]}) is already in the database. (error: UNIQUE constraint failed: Book.standardNumber)'
             print(msg)
             return msg
         elif str(error
                  ) == 'UNIQUE constraint failed: Book.bibID':  #which error?
-            msg = f'{bib} "{book[0]}" is already in the database. (error: UNIQUE constraint failed: Book.bibID)'
+            msg = f'{book[2]} "{book[0]}" is already in the database. (error: UNIQUE constraint failed: Book.bibID)'
             print(msg)
             return msg
         else:

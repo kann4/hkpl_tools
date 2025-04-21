@@ -115,7 +115,7 @@ def get_value(table_book, book_info_type):
     return book_info
 
 
-def get_copy_info(bs: BeautifulSoup):
+def get_copies_info(bs: BeautifulSoup):
     """
     Extracts copy information from a BeautifulSoup object and returns it as a list of lists.
 
