@@ -1,11 +1,13 @@
 import datetime
 import logging
 from flask import Flask, render_template, request
+from flask_cors import CORS
 from book_service import get_book_table, del_book, add_book_by_bib_or_url, update_all_copies, update_current_copies, get_last_update, get_list_of_libraries, get_copies
 from hkpl_service import get_book_list
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
 
 libraries = get_list_of_libraries()
 # add attr "fav" to lib1, lib2
