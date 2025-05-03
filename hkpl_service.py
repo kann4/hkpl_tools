@@ -21,9 +21,11 @@ def get_url_from_bib(bib: str):
     :return: url of the book
     :rtype: str
     """
-    return 'https://webcat.hkpl.gov.hk/lib/item?id=chamo:' \
-    + str(bib).lstrip('0') \
-    + '&fromLocationLink=false&theme=mobile&showAll=true&locale=en'
+    return (
+        'https://webcat.hkpl.gov.hk/lib/item?id=chamo:'
+        + str(bib).lstrip('0')
+        + '&fromLocationLink=false&theme=mobile&showAll=true&locale=en'
+    )
 
 
 def get_htmlbytes(bib_or_url: str):
@@ -41,13 +43,14 @@ def get_htmlbytes(bib_or_url: str):
         url = get_url_from_bib(bib_or_url)
     try:
         response = urllib.request.urlopen(
-            urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'}))
+            urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        )
     except urllib.request.HTTPError as e:
         print(e)
         return f'Error. "{url}" cannot be reached. Check hkpl web or bib exist.'
 
     htmlbytes = response.read()
-    bs = BeautifulSoup(htmlbytes, "html.parser")
+    bs = BeautifulSoup(htmlbytes, 'html.parser')
     return bs
 
 
@@ -55,8 +58,8 @@ def get_book_info(bs: BeautifulSoup):
     """
     Extracts book information from a BeautifulSoup object and returns it as a tuple.
 
-    The function retrieves the book title and various bibliographic details 
-    from the parsed HTML content of a webpage. It also includes the current 
+    The function retrieves the book title and various bibliographic details
+    from the parsed HTML content of a webpage. It also includes the current
     date twice at the end of the returned tuple.
 
     :param bs: A BeautifulSoup object representing the parsed HTML content of a book's webpage.
@@ -71,9 +74,18 @@ def get_book_info(bs: BeautifulSoup):
     book.append(book_title)
 
     items = [
-        'Author', 'Bib ID', 'Call Number', 'Physical Description',
-        'Place of Publication', 'Publisher', 'Year', 'Series Title', 'Subject',
-        'Added Author', 'Standard No.', 'Language'
+        'Author',
+        'Bib ID',
+        'Call Number',
+        'Physical Description',
+        'Place of Publication',
+        'Publisher',
+        'Year',
+        'Series Title',
+        'Subject',
+        'Added Author',
+        'Standard No.',
+        'Language',
     ]
 
     table_book = bs.find('div', class_='itemFields').table
@@ -89,8 +101,8 @@ def get_value(table_book, book_info_type):
     """
     Retrieves the value of a book information type from a parsed HTML content of a book's webpage.
 
-    The function takes a parsed HTML content of a book's webpage and the type of book information 
-    to retrieve as parameters. It returns the value of the specified book information type 
+    The function takes a parsed HTML content of a book's webpage and the type of book information
+    to retrieve as parameters. It returns the value of the specified book information type
     as a string. If the information type is not found, it returns 'N/A'.
 
     :param table_book: A BeautifulSoup object representing the parsed HTML content of a book's webpage.
@@ -100,12 +112,14 @@ def get_value(table_book, book_info_type):
     :return: The value of the specified book information type as a string.
     :rtype: str
     """
-    td = table_book.find(
-        'td', string=book_info_type)  #tdre where item name is placed
+    td = table_book.find('td', string=book_info_type)  # tdre where item name is placed
     if td is not None:
         book_info = td.find_next_sibling(
-            'td').string  #next td is the value of the item
-        if book_info is None:  #sometimes the info has > 1 line. td is empty. Those info are placed in the divs inside that td
+            'td'
+        ).string  # next td is the value of the item
+        if (
+            book_info is None
+        ):  # sometimes the info has > 1 line. td is empty. Those info are placed in the divs inside that td
             book_info = ''
             divs = td.find_next_sibling('td').find_all('div')
             for div in divs:
@@ -119,15 +133,15 @@ def get_copies_info(bs: BeautifulSoup):
     """
     Extracts copy information from a BeautifulSoup object and returns it as a list of lists.
 
-    The function retrieves the library name, status, collection, creation date, and last update date 
+    The function retrieves the library name, status, collection, creation date, and last update date
     for each copy of a book from the parsed HTML content of a webpage.
-    
+
     :param bs: A BeautifulSoup object representing the parsed HTML content of a book's webpage.
     :type bs: BeautifulSoup
     :return: A list of lists, each containing the library name, status, collection, creation date, and last update date for a copy of a book.
     :rtype: list
     """
-    time_now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    time_now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     table_copies = bs.find_all('form')[2].tbody
     trs = table_copies.find_all('tr')[:-1]
     copies = []
@@ -139,9 +153,7 @@ def get_copies_info(bs: BeautifulSoup):
         status = divs[3].string
         collection = divs[4].string
         creation_date = last_update_date = str(time_now)
-        copies[i] = [
-            library, status, collection, creation_date, last_update_date
-        ]
+        copies[i] = [library, status, collection, creation_date, last_update_date]
     return copies
 
 
@@ -154,13 +166,14 @@ def get_book_list(search_term):
     url = get_search_url(search_term)
     try:
         response = urllib.request.urlopen(
-            urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'}))
+            urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        )
     except urllib.request.HTTPError as e:
         print(e)
         return f'Error. "{url}" cannot be reached. Check hkpl web or bib exist.'
 
     htmlbytes = response.read()
-    bs = BeautifulSoup(htmlbytes, "html.parser")
+    bs = BeautifulSoup(htmlbytes, 'html.parser')
     books = []
 
     # Extract book information
@@ -182,18 +195,19 @@ def get_book_list(search_term):
                     label = row.find('td', class_='label')
                     if label and label.text.strip() == 'Publication':
                         book_info['publication'] = label.find_next_sibling(
-                            'td').text.strip()
+                            'td'
+                        ).text.strip()
                     if label and label.text.strip() == 'Call Number':
                         book_info['call_number'] = label.find_next_sibling(
-                            'td').text.strip()
+                            'td'
+                        ).text.strip()
 
             # Extract availability
             availability = record.find('span', class_='availabilityTotal')
             if availability:
                 availability_text = availability.text.strip()
                 try:
-                    book_info['available_copies'] = int(
-                        availability_text.split()[0])
+                    book_info['available_copies'] = int(availability_text.split()[0])
                 except (ValueError, IndexError):
                     book_info['available_copies'] = 0
 
@@ -204,8 +218,11 @@ def get_book_list(search_term):
                 # Extract ID from href
                 href = title.get('href')
                 if href:
-                    book_info['bib'] = href.split('id=')[1].split(
-                        '&')[0].split(':')[1] if 'id=' in href else None
+                    book_info['bib'] = (
+                        href.split('id=')[1].split('&')[0].split(':')[1]
+                        if 'id=' in href
+                        else None
+                    )
 
             if book_info:  # Only add if we have complete information
                 books.append(book_info)

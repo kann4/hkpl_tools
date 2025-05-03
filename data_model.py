@@ -5,8 +5,8 @@ from typing import Optional
 @dataclass
 class LibraryModel:
     libraryID: int
-    englishName: str = ""
-    chineseName: str = ""
+    englishName: str = ''
+    chineseName: str = ''
     creationDate: Optional[str] = None
     lastUpdateDate: Optional[str] = None
 
@@ -16,8 +16,8 @@ class BookModel:
     bookID: int
     bookName: Optional[str] = None
     author: Optional[str] = None
-    bibID: str = ""
-    callNumber: str = ""
+    bibID: str = ''
+    callNumber: str = ''
     physicalDescription: Optional[str] = None
     placeOfPublication: Optional[str] = None
     publisher: Optional[str] = None
