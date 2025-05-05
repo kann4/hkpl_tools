@@ -9,3 +9,5 @@ notes.txt
 .venv*
 venv
 *.sqbpro
+asy_test.py
+debug.log
