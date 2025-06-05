@@ -17,7 +17,7 @@ from time import sleep
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-CORS(app, resources={r'/api/*': {'origins': 'http://localhost:5173'}})
+CORS(app, resources={r'/api/*': {'origins': ['http://localhost:5173', 'http://192.168.1.246:5173']}})
 
 libraries = get_list_of_libraries()
 # add attr "fav" to lib1, lib2
@@ -189,6 +189,10 @@ def api_libraries():
     sleep(0.5)
     return libraries
 
+@app.route('/test')
+def test():
+    print('I AM HERE')
+    return 'hello, world!'
 
-# @app.route("/Delete_Books", methods=['POST'])
-# def deleteBook():
+# @app.route("/delete_books", methods=['post'])
+# def deletebook():
